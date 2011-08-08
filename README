@@ -1,0 +1,80 @@
+================
+InvoiceGenerator
+================
+
+This is library to generate a simple PDF invoice. It's based on ReportLab. Right now it support's only czech language, but I will fix it very soon.
+
+-----------
+Instalation
+-----------
+
+Run this command as root:
+
+	pip install InvoiceGenerator
+
+If you want upgrade to new version, add --upgrade flag.
+
+	pip install InvoiceGenerator --upgrade
+
+You can use setup.py from GitHub repository too.
+
+	python setup.py install
+
+-------
+Example
+-------
+
+	from InvoiceGenerator.generator import Address, Item, Invoice
+
+	# Create client's address
+	client = Address()
+	client.firstname = "Adam"
+	client.lastname = "Štrauch"
+	client.address = "Houští 474"
+	client.city = "Lanškroun"
+	client.zip = "563 01"
+	client.phone = "+420777636388"
+	client.email = "cx@initd.cz"
+	client.bank_name = "GE Money Bank"
+	client.bank_account = "181553009/0600"
+	client.note = "Blablabla"
+
+	# Create your address
+	provider = Address()
+	provider.firstname = "Adam"
+	provider.lastname = "Štrauch"
+	provider.address = "Houští 474"
+	provider.city = "Lanškroun"
+	provider.zip = "563 01"
+	provider.phone = "+420777636388"
+	provider.email = "cx@initd.cz"
+	provider.bank_name = "GE Money Bank"
+	provider.bank_account = "181553009/0600"
+	provider.note = "Blablabla"
+
+	# Create first item
+	item1 = Item()
+	item1.name = "Položka 1"
+	item1.count = 5
+	item1.price = 100
+
+	# Create seconf item
+	item2 = Item()
+	item2.name = "Položka 2"
+	item2.count = 10
+	item2.price = 750
+
+	# and finaly create Invoice
+	invoice = Invoice()
+	invoice.setClient(client)
+	invoice.setProvider(provider)
+	invoice.setTitle("Faktura")
+	invoice.setVS("00001")
+	invoice.setCreator("Adam Štrauch")
+	invoice.addItem(item1)
+	invoice.addItem(item2)
+
+	# and save it anywhere you want
+	f = open("test.pdf", "w")
+	f.write(invoice.getContent())
+	f.close()
