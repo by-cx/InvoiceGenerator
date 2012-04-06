@@ -60,8 +60,9 @@ class BaseInvoice(object):
     #############################################################
 
     def addMetaInformation(self, pdf):
-        pdf.setCreator(self.invoice.creator)
+        pdf.setCreator(self.invoice.provider.summary)
         pdf.setTitle(self.invoice.title)
+        pdf.setAuthor(self.invoice.creator.name)
 
     def drawMain(self):
         # Up line
