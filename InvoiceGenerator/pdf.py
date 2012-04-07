@@ -1,10 +1,5 @@
 # -*- coding: utf - 8 -*-
 from PIL import Image
-try:
-    import gettext
-    _ = gettext.gettext
-except ImportError:
-    _ = lambda x: x
 
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
@@ -13,7 +8,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 
 
-
+from conf import _, FONT_PATH, FONT_BOLD_PATH
 from api import Invoice
 
 class BaseInvoice(object):
@@ -29,16 +24,13 @@ class BaseInvoice(object):
 
 class SimpleInvoice(BaseInvoice):
 
-    FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
-    FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
-
     def gen(self, filename):
         self.TOP = 260
         self.LEFT = 20
         self.filename = filename
 
-        pdfmetrics.registerFont(TTFont('DejaVu', self.FONT_PATH))
-        pdfmetrics.registerFont(TTFont('DejaVu-Bold', self.FONT_BOLD_PATH))
+        pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
+        pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
 
         self.pdf = Canvas(self.filename, pagesize = letter)
         self.addMetaInformation(self.pdf)
