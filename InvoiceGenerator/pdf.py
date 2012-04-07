@@ -16,17 +16,21 @@ from reportlab.pdfbase import pdfmetrics
 
 from api import Invoice
 
-
-class SimpleInvoice(object):
-
-    FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
-    FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
+class BaseInvoice(object):
 
     def __init__(self, invoice):
         assert isinstance(invoice, Invoice)
 
         self.invoice = invoice
 
+    def gen(self, filename):
+        pass
+
+
+class SimpleInvoice(BaseInvoice):
+
+    FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
+    FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
 
     def gen(self, filename):
         self.TOP = 260

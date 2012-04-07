@@ -10,6 +10,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from tempfile import NamedTemporaryFile
 
+from api import Invoice as ApiInvoice
+from pdf import BaseInvoice
+
 class Address:
     firstname = ""
     lastname = ""
@@ -243,6 +246,18 @@ Variabilní symbol: %s"""%(self.provider.bank_name ,self.provider.bank_account, 
         self.pdf.drawString((LEFT)*mm, (TOP+1)*mm, "Datum vystavení: %s" % today.strftime("%d.%m.%Y"))
         self.pdf.drawString((LEFT)*mm, (TOP-4)*mm, "Datum splatnosti: %s" % payback.strftime("%d.%m.%Y"))
         self.pdf.drawString((LEFT)*mm, (TOP-9)*mm, "Forma úhrady: " + self.paytype)
+
+class Generator(object):
+
+    def __init__(self, invoice):
+        assert isinstance(invoice, ApiInvoice)
+        self.invoice = invoice
+
+    def gen(self, filename, pdf_invoice):
+        assert issubclass(pdf_invoice, BaseInvoice)
+
+        pdf = pdf_invoice(self.invoice)
+        pdf.gen(filename)
 
 if __name__ == "__main__":
     client = Address()
