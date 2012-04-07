@@ -66,10 +66,10 @@ class BaseInvoice(object):
 
     def drawMain(self):
         # Up line
-        self.pdf.drawString(self.LEFT*mm, self.TOP*mm, _('Invoice'))
+        self.pdf.drawString(self.LEFT*mm, self.TOP*mm, _(u'Invoice'))
         self.pdf.drawString((self.LEFT + 100) * mm,
                             self.TOP*mm,
-                            _('Variable symbol: %s') %
+                            _(u'Variable symbol: %s') %
                             self.invoice.variable_symbol)
 
         # Borders
@@ -93,7 +93,7 @@ class BaseInvoice(object):
 
     def drawClient(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 12)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _('Customer'))
+        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Customer'))
         self.pdf.setFont('DejaVu', 8)
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
@@ -106,7 +106,7 @@ class BaseInvoice(object):
 
     def drawProvider(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 12)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _('Provider'))
+        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Provider'))
         self.pdf.setFont('DejaVu', 8)
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
@@ -123,13 +123,13 @@ class BaseInvoice(object):
 
     def drawPayment(self,TOP,LEFT):
         self.pdf.setFont('DejaVu-Bold', 9)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _('Payment information'))
+        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Payment information'))
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
         lines = [
             self.invoice.provider.bank_name,
-            '%s: %s' % (_('Bank account'), self.invoice.provider.bank_account),
-            '%s: %s' % (_('Variable symbol'), self.invoice.variable_symbol)
+            '%s: %s' % (_(u'Bank account'), self.invoice.provider.bank_account),
+            '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol)
         ]
         text.textLines('\n'.join(lines))
         self.pdf.drawText(text)
@@ -142,29 +142,29 @@ class BaseInvoice(object):
         self.pdf.drawPath(path, True, True)
 
         self.pdf.setFont('DejaVu-Bold', 7)
-        self.pdf.drawString((LEFT + 1) * mm, (TOP - 2) * mm, _('List of items'))
+        self.pdf.drawString((LEFT + 1) * mm, (TOP - 2) * mm, _(u'List of items'))
 
-        self.pdf.drawString((LEFT + 1) * mm, (TOP - 9) * mm, _('Description'))
+        self.pdf.drawString((LEFT + 1) * mm, (TOP - 9) * mm, _(u'Description'))
         if self.invoice.vat_number:
             i=9
-            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, _('Units'))
+            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, _(u'Units'))
             self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm,
-                                _('Price per one'))
+                                _(u'Price per one'))
             self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm,
-                                _('Total price'))
+                                _(u'Total price'))
             self.pdf.drawString((LEFT + 137) * mm, (TOP - i) * mm,
-                                _('Tax'))
+                                _(u'Tax'))
             self.pdf.drawString((LEFT + 146) * mm, (TOP - i) * mm,
-                                _('Total price with tax'))
+                                _(u'Total price with tax'))
             i+=5
         else:
             i=9
             self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm,
-                                _('Units'))
+                                _(u'Units'))
             self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm,
-                                _('Price per one'))
+                                _(u'Price per one'))
             self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm,
-                                _('Total price'))
+                                _(u'Total price'))
             i+=5
 
         self.pdf.setFont('DejaVu', 7)
@@ -199,9 +199,9 @@ class BaseInvoice(object):
         self.pdf.drawPath(path, True, True)
 
         self.pdf.setFont('DejaVu-Bold', 11)
-        self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _('Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
+        self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _(u'Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
         if self.invoice.vat_number:
-            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, _('Total with tax')+': %.2f %s' % (self.invoice.price_tax, self.invoice.currency))
+            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, _(u'Total with tax')+': %.2f %s' % (self.invoice.price_tax, self.invoice.currency))
 
         if self.invoice.vat_number:
             self.pdf.rect(LEFT * mm, (TOP - i - 17) * mm, (LEFT + 156) * mm, (i + 19) * mm, stroke=True, fill=False) #140,142
@@ -218,11 +218,11 @@ class BaseInvoice(object):
         path.lineTo((LEFT + 164) * mm, (TOP - i - 70) * mm)
         self.pdf.drawPath(path, True, True)
 
-        self.pdf.drawString((LEFT + 112) * mm, (TOP - i - 75) * mm, '%s: %s' % (_('Creator'), self.invoice.creator))
+        self.pdf.drawString((LEFT + 112) * mm, (TOP - i - 75) * mm, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
 
 
     def drawDates(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 10)
-        self.pdf.drawString(LEFT * mm, (TOP + 1) * mm, '%s: %s' % (_('Date'), self.invoice.date))
-        self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, '%s: %s' % (_('Payback'), self.invoice.payback))
-        self.pdf.drawString(LEFT * mm, (TOP - 9) * mm, '%s: %s' % (_('Paytype'), self.invoice.paytype))
+        self.pdf.drawString(LEFT * mm, (TOP + 1) * mm, '%s: %s' % (_(u'Date'), self.invoice.date))
+        self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, '%s: %s' % (_(u'Payback'), self.invoice.payback))
+        self.pdf.drawString(LEFT * mm, (TOP - 9) * mm, '%s: %s' % (_(u'Paytype'), self.invoice.paytype))
