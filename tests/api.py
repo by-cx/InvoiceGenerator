@@ -1,0 +1,162 @@
+# -*- coding: utf-8 -*-
+import unittest
+import uuid
+
+
+from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
+    Invoice
+
+class AddressTest(unittest.TestCase):
+
+    attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
+             'bank_name', 'bank_account', 'note')
+
+    addresss_object = Address
+
+    def test_required_args(self):
+        self.assertRaises(TypeError, self.addresss_object)
+
+    def test_check_data_types(self):
+        address = self.addresss_object({key: uuid.uuid4()
+                                        for key in self.attrs})
+        for key in self.attrs:
+            self.assertIsInstance(address.__getattribute__(key), unicode)
+
+    def test_get_address_lines(self):
+        summary = 'Py s.r.o.'
+        address = 'Prague street'
+        zip = '1344234234'
+        city = 'Prague'
+
+        address_object = self.addresss_object(summary, address, city, zip)
+
+        expected = [summary, address, u'%s %s' % (zip, city)]
+        self.assertEquals(expected, address_object.get_address_lines())
+
+    def test_get_contact_lines(self):
+        phone = '56846846'
+        email = 'mail@mail.com'
+
+        address = self.addresss_object('Foo s.r.o.', phone=phone, email=email)
+
+        expected = [phone, email]
+        self.assertEquals(expected, address.get_contact_lines())
+
+class ClientTest(AddressTest):
+    addresss_object = Client
+
+class ProviderTest(AddressTest):
+    addresss_object = Provider
+
+class CreatorTest(unittest.TestCase):
+
+    def test_required_args(self):
+        self.assertRaises(TypeError, Creator)
+
+    def test_check_data_types(self):
+        creator = Creator('John Doe', '/black/hole')
+
+        self.assertIsInstance(creator.name, unicode)
+        self.assertIsInstance(creator.stamp_filename, unicode)
+
+class ItemTest(unittest.TestCase):
+
+    def test_required_args(self):
+        self.assertRaises(TypeError, Item)
+        self.assertRaises(TypeError, Item, 42)
+
+    def test_check_data_types_set_in_constructor(self):
+        item = Item('42', '666', 'Item description', 'hour', '1.1')
+
+        self.assertIsInstance(item.count, int)
+        self.assertIsInstance(item.price, float)
+        self.assertIsInstance(item.description, unicode)
+        self.assertIsInstance(item.unit, unicode)
+        self.assertIsInstance(item.tax, float)
+
+    def test_getters_and_setters(self):
+        item = Item(24, 666)
+
+        item.count = '44'
+        item.price = '666'
+        item.description = 'Foo bar'
+        item.unit = 'hour'
+        item.tax = '99.9'
+
+        self.assertIsInstance(item.count, int)
+        self.assertIsInstance(item.price, float)
+        self.assertIsInstance(item.description, unicode)
+        self.assertIsInstance(item.unit, unicode)
+        self.assertIsInstance(item.tax, float)
+
+    def test_count_total(self):
+        count = 42
+        price = 666
+        item = Item(count, price)
+        self.assertEquals(count * price, item.total)
+
+    def test_count_total_with_tax(self):
+        count = 24
+        price = 42
+        tax = 99.9
+        item = Item(count, price, tax=tax)
+        expected =  price * count * (1.0 + tax / 100.0)
+        self.assertEquals(expected, item.total_tax)
+
+
+class InvoiceTest(unittest.TestCase):
+
+    def test_check_required_args(self):
+        self.assertRaises(TypeError, Invoice)
+        self.assertRaises(TypeError, Invoice, (), ())
+
+        sample_data = (
+            {'client': '', 'provider': '', 'creator': ''},
+            {'client': Client('foo'), 'provider': '', 'creator': ''},
+            {'client': Client('foo'), 'provider': Provider('bar'),
+             'creator': ''},
+
+        )
+        for args in sample_data:
+            self.assertRaises(AssertionError, Invoice, **args)
+
+
+    def test_check_attrs(self):
+        attrs = ('title', 'variable_symbol', 'paytype', 'currency', 'date',
+                          'payback')
+
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+
+        for attr in attrs:
+            self.assertTrue(hasattr(invoice, attr))
+
+        invoice.vat_number = '13'
+        self.assertIsInstance(invoice.vat_number, float)
+
+    def test_add_item(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+
+        self.assertRaises(AssertionError, invoice.add_item, '')
+
+        for item in [Item(1, 500), Item(2, 500), Item(3, 500)]:
+            invoice.add_item(item)
+
+        self.assertEquals(3, len(invoice.items))
+
+
+    def test_price(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        items = [Item(1, 500), Item(2, 500), Item(3, 500)]
+        for item in items:
+            invoice.add_item(item)
+
+        self.assertEqual(sum([item.total for item in items]), invoice.price)
+
+    def test_price_tax(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        items = [Item(1, 500, tax=99.9), Item(2, 500, tax=99.9),
+                 Item(3, 500, tax=99.9)]
+        for item in items:
+            invoice.add_item(item)
+
+        self.assertEqual(sum([item.total_tax for item in items]), invoice.price_tax)
