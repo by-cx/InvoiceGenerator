@@ -17,7 +17,7 @@ from reportlab.pdfbase import pdfmetrics
 from api import Invoice
 
 
-class BaseInvoice(object):
+class SimpleInvoice(object):
 
     FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
     FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
