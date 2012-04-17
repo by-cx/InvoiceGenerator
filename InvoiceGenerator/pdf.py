@@ -41,7 +41,7 @@ class SimpleInvoice(BaseInvoice):
         # Texty
         self.drawMain()
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
-        self.drawClient(self.TOP - 30,self.LEFT + 91)
+        self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
         self.drawItems(self.TOP - 80,self.LEFT)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
@@ -83,8 +83,8 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawPath(path, True, True)
 
         path = self.pdf.beginPath()
-        path.moveTo((self.LEFT + 88) * mm, (self.TOP - 23) * mm)
-        path.lineTo((self.LEFT + 176) * mm, (self.TOP - 23) * mm)
+        path.moveTo((self.LEFT + 88) * mm, (self.TOP - 27) * mm)
+        path.lineTo((self.LEFT + 176) * mm, (self.TOP - 27) * mm)
         self.pdf.drawPath(path, True, True)
 
     def drawClient(self,TOP,LEFT):
@@ -224,6 +224,22 @@ class SimpleInvoice(BaseInvoice):
 
     def drawDates(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 10)
-        self.pdf.drawString(LEFT * mm, (TOP + 1) * mm, '%s: %s' % (_(u'Date'), self.invoice.date))
-        self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, '%s: %s' % (_(u'Payback'), self.invoice.payback))
-        self.pdf.drawString(LEFT * mm, (TOP - 9) * mm, '%s: %s' % (_(u'Paytype'), self.invoice.paytype))
+        top = TOP + 1
+        items = [
+            (LEFT * mm, '%s: %s' % (_(u'Date'), self.invoice.date)),
+            (LEFT * mm, '%s: %s' % (_(u'Payback'),
+                                              self.invoice.payback))
+
+        ]
+        if self.invoice.taxable_date:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Taxable date'),
+                        self.invoice.taxable_date)))
+
+        items.append((LEFT * mm, '%s: %s' % (_(u'Paytype'),
+                                                       self.invoice.paytype)))
+
+        for item in items:
+            self.pdf.drawString(item[0], top * mm, item[1])
+            top += -5
+
+

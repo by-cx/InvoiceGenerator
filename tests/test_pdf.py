@@ -20,6 +20,8 @@ class TestBaseInvoice(unittest.TestCase):
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
         invoice.add_item(Item(32, 600))
         invoice.specific_symbol = 666
+        invoice.taxable_date = '1.1.1979'
+        invoice.variable_symbol = '000000001'
 
         tmp_file = NamedTemporaryFile()
 
