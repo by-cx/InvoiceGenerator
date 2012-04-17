@@ -160,3 +160,11 @@ class InvoiceTest(unittest.TestCase):
             invoice.add_item(item)
 
         self.assertEqual(sum([item.total_tax for item in items]), invoice.price_tax)
+
+
+    def test_use_tax(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        invoice.add_item(Item(1, 500, tax=99.9))
+        invoice.add_item(Item(500, 5))
+
+        self.assertTrue(invoice.use_tax)

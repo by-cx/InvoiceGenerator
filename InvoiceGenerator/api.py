@@ -147,6 +147,15 @@ class Invoice(UnicodeProperty):
         return self._items
 
     @property
+    def use_tax(self):
+        use_tax = False
+        for item in self.items:
+            if item.tax:
+                use_tax = True
+                continue
+        return use_tax
+
+    @property
     def vat_number(self):
         return self._vat_number
 
