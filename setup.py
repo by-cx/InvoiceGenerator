@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name = "InvoiceGenerator",
-    version = "0.2.0",
+    version = "0.2.1",
     author = "Adam Strauch",
     author_email = "cx@initd.cz",
     description = ("Library to generate PDF invoice."),
