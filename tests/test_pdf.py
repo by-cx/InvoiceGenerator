@@ -24,3 +24,16 @@ class TestBaseInvoice(unittest.TestCase):
 
         pdf = SimpleInvoice(invoice)
         pdf.gen(tmp_file.name)
+
+
+    def test_generate_with_vat(self):
+        invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
+        invoice.add_item(Item(32, 600))
+        invoice.add_item(Item(60, 50, tax=10))
+        invoice.add_item(Item(50, 60, tax=5))
+        invoice.add_item(Item(5, 600, tax=50))
+
+        tmp_file = NamedTemporaryFile()
+
+        pdf = SimpleInvoice(invoice)
+        pdf.gen(tmp_file.name)

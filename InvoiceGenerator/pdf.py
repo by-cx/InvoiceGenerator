@@ -141,7 +141,8 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawString((LEFT + 1) * mm, (TOP - 2) * mm, _(u'List of items'))
 
         self.pdf.drawString((LEFT + 1) * mm, (TOP - 9) * mm, _(u'Description'))
-        if self.invoice.vat_number:
+        items_are_with_tax = self.invoice.use_tax
+        if items_are_with_tax:
             i=9
             self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, _(u'Units'))
             self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm,
@@ -168,7 +169,8 @@ class SimpleInvoice(BaseInvoice):
         # List
         for item in self.invoice.items:
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
-            if self.invoice.vat_number:
+            if item.tax or items_are_with_tax:
+                items_are_with_tax = True
                 if len(item.description) > 52: i+=5
                 if float(int(item.count)) == item.count:
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
@@ -196,10 +198,10 @@ class SimpleInvoice(BaseInvoice):
 
         self.pdf.setFont('DejaVu-Bold', 11)
         self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _(u'Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
-        if self.invoice.vat_number:
+        if items_are_with_tax:
             self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, _(u'Total with tax')+': %.2f %s' % (self.invoice.price_tax, self.invoice.currency))
 
-        if self.invoice.vat_number:
+        if items_are_with_tax:
             self.pdf.rect(LEFT * mm, (TOP - i - 17) * mm, (LEFT + 156) * mm, (i + 19) * mm, stroke=True, fill=False) #140,142
         else:
             self.pdf.rect(LEFT * mm, (TOP - i - 11) * mm, (LEFT + 156) * mm, (i + 13) * mm, stroke=True, fill=False) #140,142
