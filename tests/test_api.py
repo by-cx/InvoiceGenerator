@@ -122,8 +122,8 @@ class InvoiceTest(unittest.TestCase):
 
 
     def test_check_attrs(self):
-        attrs = ('title', 'variable_symbol', 'paytype', 'currency', 'date',
-                          'payback')
+        attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
+                 'currency', 'date', 'payback')
 
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
 

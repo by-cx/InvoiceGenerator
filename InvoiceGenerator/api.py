@@ -113,8 +113,8 @@ class Item(object):
 
 
 class Invoice(UnicodeProperty):
-    _attrs = ('title', 'variable_symbol', 'paytype', 'currency', 'date',
-              'payback')
+    _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
+              'currency', 'date', 'payback')
 
     def __init__(self, client, provider, creator):
         assert isinstance(client, Client)
