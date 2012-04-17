@@ -125,7 +125,6 @@ class Invoice(UnicodeProperty):
         self.provider = provider
         self.creator = creator
         self._items = []
-        self._vat_number = 0.0
 
         for attr in self._attrs:
             self.__setattr__(attr, '')
@@ -154,11 +153,3 @@ class Invoice(UnicodeProperty):
                 use_tax = True
                 continue
         return use_tax
-
-    @property
-    def vat_number(self):
-        return self._vat_number
-
-    @vat_number.setter
-    def vat_number(self, value):
-        self._vat_number = float(value)

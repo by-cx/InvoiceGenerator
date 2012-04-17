@@ -130,9 +130,6 @@ class InvoiceTest(unittest.TestCase):
         for attr in attrs:
             self.assertTrue(hasattr(invoice, attr))
 
-        invoice.vat_number = '13'
-        self.assertIsInstance(invoice.vat_number, float)
-
     def test_add_item(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
 
