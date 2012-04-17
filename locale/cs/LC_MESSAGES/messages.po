@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-07 17:30+0200\n"
-"PO-Revision-Date: 2012-04-07 19:28+0100\n"
+"PO-Revision-Date: 2012-04-17 22:51+0100\n"
 "Last-Translator: rbas <rbas@rbas.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -44,6 +44,9 @@ msgstr "Bankovní účet"
 #: pdf.py:136
 msgid "Variable symbol"
 msgstr "Variabilní symbol"
+
+msgid "Specific symbol"
+msgstr "Specifický symbol"
 
 #: pdf.py:149
 msgid "List of items"
@@ -95,6 +98,9 @@ msgstr "Datum"
 #: pdf.py:231
 msgid "Payback"
 msgstr "Splatnost"
+
+msgid "Taxable date"
+msgstr "Datum zdanitelného plnění"
 
 #: pdf.py:232
 msgid "Paytype"
