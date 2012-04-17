@@ -19,6 +19,7 @@ class TestBaseInvoice(unittest.TestCase):
 
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
         invoice.add_item(Item(32, 600))
+        invoice.specific_symbol = 666
 
         tmp_file = NamedTemporaryFile()
 

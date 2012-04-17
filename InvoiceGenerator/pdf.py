@@ -127,6 +127,9 @@ class SimpleInvoice(BaseInvoice):
             '%s: %s' % (_(u'Bank account'), self.invoice.provider.bank_account),
             '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol)
         ]
+        if self.invoice.specific_symbol:
+            lines.append(
+                '%s: %s' % (_(u'Specific symbol'), self.invoice.specific_symbol))
         text.textLines('\n'.join(lines))
         self.pdf.drawText(text)
 
