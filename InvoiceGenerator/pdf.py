@@ -63,7 +63,7 @@ class SimpleInvoice(BaseInvoice):
     def drawMain(self):
         # Up line
         self.pdf.drawString(self.LEFT*mm, self.TOP*mm, _(u'Invoice'))
-        self.pdf.drawString((self.LEFT + 100) * mm,
+        self.pdf.drawString((self.LEFT + 90) * mm,
                             self.TOP*mm,
                             _(u'Variable symbol: %s') %
                             self.invoice.variable_symbol)
