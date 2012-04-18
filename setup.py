@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name = "InvoiceGenerator",
-    version = "0.1.0",
+    version = "0.2.2",
     author = "Adam Strauch",
     author_email = "cx@initd.cz",
     description = ("Library to generate PDF invoice."),
@@ -23,6 +23,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        "reportlab"
+        "reportlab", "PIL"
         ],
 )
