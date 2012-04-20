@@ -9,7 +9,7 @@ from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
 class AddressTest(unittest.TestCase):
 
     attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
-             'bank_name', 'bank_account', 'note')
+             'bank_name', 'bank_account', 'note', 'vat_id', 'ir')
 
     addresss_object = Address
 
@@ -95,6 +95,14 @@ class ItemTest(unittest.TestCase):
         item = Item(count, price)
         self.assertEquals(count * price, item.total)
 
+    def test_count_tax(self):
+
+        item = Item(2, 50, tax=50)
+        self.assertEqual(50, item.count_tax())
+
+        item = Item(2, 50)
+        self.assertEqual(0, item.count_tax())
+
     def test_count_total_with_tax(self):
         count = 24
         price = 42
@@ -165,3 +173,29 @@ class InvoiceTest(unittest.TestCase):
         invoice.add_item(Item(500, 5))
 
         self.assertTrue(invoice.use_tax)
+
+    def test_generate_breakdown_vat(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        invoice.add_item(Item(1, 500, tax=50))
+        invoice.add_item(Item(3, 500, tax=50))
+        invoice.add_item(Item(500, 5, tax=0))
+        invoice.add_item(Item(5, 500, tax=0))
+
+        expected = {
+            0.0: {'total': 5000.0, 'total_tax': 5000.0, 'tax': 0.0},
+            50.0: {'total': 2000.0, 'total_tax': 3000.0, 'tax': 1000}}
+
+        self.assertEquals(expected, invoice.generate_breakdown_vat())
+
+
+    def test_generate_breakdown_vat_table(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        invoice.add_item(Item(1, 500, tax=50))
+        invoice.add_item(Item(3, 500, tax=50))
+        invoice.add_item(Item(500, 5, tax=0))
+        invoice.add_item(Item(5, 500, tax=0))
+
+        expected = [(0.00, 5000.0, 5000.0, 0),(50.0, 2000.0, 3000.0, 1000.0)]
+
+        self.assertEquals(expected, invoice.generate_breakdown_vat_table())
+

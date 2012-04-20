@@ -6,7 +6,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-
+from reportlab.platypus.tables import Table, TableStyle
 
 from conf import _, FONT_PATH, FONT_BOLD_PATH
 from api import Invoice
@@ -114,8 +114,10 @@ class SimpleInvoice(BaseInvoice):
 
         self.pdf.drawText(text)
         if self.invoice.provider.note:
-            self.pdf.drawString((LEFT + 2) * mm, (TOP - 26) * mm,
-                                self.invoice.provider.note)
+            self.pdf.setFont('DejaVu', 6)
+            text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
+            text.textLines(self.invoice.provider.note)
+            self.pdf.drawText(text)
 
     def drawPayment(self,TOP,LEFT):
         self.pdf.setFont('DejaVu-Bold', 9)
@@ -199,9 +201,40 @@ class SimpleInvoice(BaseInvoice):
         path.lineTo((LEFT + 176) * mm, (TOP - i) * mm)
         self.pdf.drawPath(path, True, True)
 
-        self.pdf.setFont('DejaVu-Bold', 11)
-        self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _(u'Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
-        if items_are_with_tax:
+        if not items_are_with_tax:
+            self.pdf.setFont('DejaVu-Bold', 11)
+            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _(u'Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
+        else:
+            self.pdf.setFont('DejaVu-Bold', 6)
+            self.pdf.drawString((LEFT + 1) * mm, (TOP - i - 2) * mm, _(u'Breakdown VAT'))
+            vat_list, tax_list, total_list, total_tax_list = [_(u'VAT rate')], [_(u'Tax')], [_(u'Without VAT')], [_(u'With VAT')]
+            for vat, items in self.invoice.generate_breakdown_vat().iteritems():
+                vat_list.append('%.2f%%' % vat)
+                tax_list.append('%.2f %s' % (items['tax'], self.invoice.currency))
+                total_list.append('%.2f %s' % (items['total'], self.invoice.currency))
+                total_tax_list.append('%.2f %s' % (items['total_tax'], self.invoice.currency))
+
+
+            self.pdf.setFont('DejaVu', 6)
+            text = self.pdf.beginText((LEFT + 1) * mm, (TOP - i - 5) * mm)
+            text.textLines('\n'.join(vat_list))
+            self.pdf.drawText(text)
+
+            text = self.pdf.beginText((LEFT + 11) * mm, (TOP - i - 5) * mm)
+            text.textLines('\n'.join(tax_list))
+            self.pdf.drawText(text)
+
+            text = self.pdf.beginText((LEFT + 27) * mm, (TOP - i - 5) * mm)
+            text.textLines('\n'.join(total_list))
+            self.pdf.drawText(text)
+
+            text = self.pdf.beginText((LEFT + 45) * mm, (TOP - i - 5) * mm)
+            text.textLines('\n'.join(total_tax_list))
+            self.pdf.drawText(text)
+
+
+
+            self.pdf.setFont('DejaVu-Bold', 11)
             self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, _(u'Total with tax')+': %.2f %s' % (self.invoice.price_tax, self.invoice.currency))
 
         if items_are_with_tax:

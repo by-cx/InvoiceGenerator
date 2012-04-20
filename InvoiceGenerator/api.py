@@ -12,10 +12,10 @@ class UnicodeProperty(object):
 
 class Address(UnicodeProperty):
     _attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
-              'bank_name', 'bank_account', 'note')
+              'bank_name', 'bank_account', 'note', 'vat_id', 'ir')
 
     def __init__(self, summary, address='', city='', zip='', phone='', email='',
-               bank_name='', bank_account='', note=''):
+               bank_name='', bank_account='', note='', vat_id='', ir=''):
         self.summary = summary
         self.address = address
         self.city = city
@@ -25,14 +25,23 @@ class Address(UnicodeProperty):
         self.bank_name = bank_name
         self.bank_account = bank_account
         self.note = note
+        self.vat_id = vat_id
+        self.ir = ir
 
 
     def get_address_lines(self):
-        return [
+        address_line = [
             self.summary,
             self.address,
-            u'%s %s' % (self.zip, self.city),
+            u'%s %s' % (self.zip, self.city)
             ]
+        if self.vat_id:
+            address_line.append(u'Vat in: %s' % self.vat_id)
+
+        if self.ir:
+            address_line.append(u'IR: %s' % self.ir)
+
+        return address_line
 
     def get_contact_lines(self):
         return [
@@ -70,6 +79,9 @@ class Item(object):
     @property
     def total_tax(self):
         return self.price * self.count * (1.0 + self.tax / 100.0)
+
+    def count_tax(self):
+        return self.total_tax - self.total
 
     @property
     def description(self):
@@ -153,3 +165,25 @@ class Invoice(UnicodeProperty):
                 use_tax = True
                 continue
         return use_tax
+
+    def _get_grouped_items_by_tax(self):
+        table = {}
+        for item in self.items:
+            if not table.has_key(item.tax):
+                table[item.tax] = {'total': item.total, 'total_tax': item.total_tax, 'tax': item.count_tax()}
+            else:
+                table[item.tax]['total'] += item.total
+                table[item.tax]['total_tax'] +=  item.total_tax
+                table[item.tax]['tax'] +=  item.count_tax()
+
+        return table
+
+    def generate_breakdown_vat(self):
+        return self._get_grouped_items_by_tax()
+
+    def generate_breakdown_vat_table(self):
+        rows = []
+        for vat,items in self.generate_breakdown_vat().iteritems():
+             rows.append((vat, items['total'], items['total_tax'], items['tax']))
+
+        return rows

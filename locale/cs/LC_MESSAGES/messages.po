@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-07 17:30+0200\n"
-"PO-Revision-Date: 2012-04-17 22:51+0100\n"
+"PO-Revision-Date: 2012-04-20 23:30+0100\n"
 "Last-Translator: rbas <rbas@rbas.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -105,4 +105,16 @@ msgstr "Datum zdanitelného plnění"
 #: pdf.py:232
 msgid "Paytype"
 msgstr "Typ platby"
+
+msgid "Breakdown VAT"
+msgstr "Rozpis DPH"
+
+msgid "VAT rate"
+msgstr "Sazba"
+
+msgid "Without VAT"
+msgstr "Bez DPH"
+
+msgid "With VAT"
+msgstr "S DPH"
 
