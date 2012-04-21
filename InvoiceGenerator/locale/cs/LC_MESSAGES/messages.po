@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-07 17:30+0200\n"
-"PO-Revision-Date: 2012-04-20 23:30+0100\n"
+"PO-Revision-Date: 2012-04-21 12:48+0100\n"
 "Last-Translator: rbas <rbas@rbas.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -117,4 +117,10 @@ msgstr "Bez DPH"
 
 msgid "With VAT"
 msgstr "S DPH"
+
+msgid "Vat in: %s"
+msgstr "DIČ: %s"
+
+msgid "IR: %s"
+msgstr "IČ: %s"
 

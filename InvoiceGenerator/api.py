@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from conf import _
+
 __all__ = ['Client', 'Provider', 'Creator', 'Item', 'Invoice']
 
 class UnicodeProperty(object):
@@ -36,10 +38,10 @@ class Address(UnicodeProperty):
             u'%s %s' % (self.zip, self.city)
             ]
         if self.vat_id:
-            address_line.append(u'Vat in: %s' % self.vat_id)
+            address_line.append(_(u'Vat in: %s') % self.vat_id)
 
         if self.ir:
-            address_line.append(u'IR: %s' % self.ir)
+            address_line.append(_(u'IR: %s') % self.ir)
 
         return address_line
 
