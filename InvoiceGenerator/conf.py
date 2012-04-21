@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__)))
 
 LANGUAGE = 'cs'
 
