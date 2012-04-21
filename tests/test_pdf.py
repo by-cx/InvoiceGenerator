@@ -43,7 +43,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.variable_symbol = '000000001'
         invoice.currency = u'Kč'
 
-        tmp_file = NamedTemporaryFile(delete=False, prefix='xx_')
+        tmp_file = NamedTemporaryFile()
 
         pdf = SimpleInvoice(invoice)
         pdf.gen(tmp_file.name)
