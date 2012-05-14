@@ -92,13 +92,20 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Customer'))
         self.pdf.setFont('DejaVu', 8)
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
+        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 4) * mm)
         text.textLines('\n'.join(self.invoice.client.get_address_lines()))
         self.pdf.drawText(text)
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 28) * mm)
+        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 20) * mm)
         text.textLines('\n'.join(self.invoice.client.get_contact_lines()))
         self.pdf.drawText(text)
+
+        if self.invoice.client.note:
+            self.pdf.setFont('DejaVu', 6)
+            text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 28) * mm)
+            text.textLines(self.invoice.client.note)
+            self.pdf.drawText(text)
+
 
     def drawProvider(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 12)
