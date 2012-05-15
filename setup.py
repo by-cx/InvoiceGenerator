@@ -2,13 +2,14 @@
 
 import os
 from setuptools import setup, find_packages
+import InvoiceGenerator
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "InvoiceGenerator",
-    version = "0.1.0",
+    version = InvoiceGenerator.__versionstr__,
     author = "Adam Strauch",
     author_email = "cx@initd.cz",
     description = ("Library to generate PDF invoice."),
@@ -23,6 +24,6 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        "reportlab"
+        "reportlab", "PIL"
         ],
 )
