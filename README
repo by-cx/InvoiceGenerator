@@ -4,25 +4,26 @@ InvoiceGenerator
 
 This is library to generate a simple PDF invoice. It's based on ReportLab.
 
------------
 Instalation
------------
+===========
 
-Run this command as root:
+Run this command as root::
 
 	pip install InvoiceGenerator
 
-If you want upgrade to new version, add --upgrade flag.
+If you want upgrade to new version, add --upgrade flag.::
 
 	pip install InvoiceGenerator --upgrade
 
-You can use setup.py from GitHub repository too.
+You can use setup.py from GitHub repository too.::
 
 	python setup.py install
 
--------
+
 Example
--------
+=======
+
+Usage::
 
 	from tempfile import NamedTemporaryFile
 
@@ -39,3 +40,4 @@ Example
 
 	tmp_file = NamedTemporaryFile()
 	Generator(invoice).gen(tmp_file.name, SimpleInvoice)
+
