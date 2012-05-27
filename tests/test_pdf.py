@@ -45,7 +45,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.taxable_date = '1.1.1979'
         invoice.variable_symbol = '000000001'
         invoice.currency = u'Kč'
-        invoice.rounging_result = True
+        invoice.rounding_result = True
 
 
         tmp_file = NamedTemporaryFile()

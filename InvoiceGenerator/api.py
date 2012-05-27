@@ -130,7 +130,7 @@ class Invoice(UnicodeProperty):
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
               'currency', 'date', 'payback', 'taxable_date')
 
-    rounging_result = False
+    rounding_result = False
 
     def __init__(self, client, provider, creator):
         assert isinstance(client, Client)
@@ -188,7 +188,7 @@ class Invoice(UnicodeProperty):
         return table
 
     def _round_result(self, price):
-        if self.rounging_result:
+        if self.rounding_result:
             price = round(price, 0)
         return price
 

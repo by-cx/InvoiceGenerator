@@ -203,7 +203,7 @@ class SimpleInvoice(BaseInvoice):
                 self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.total, self.invoice.currency))
                 i+=5
 
-        if self.invoice.rounging_result:
+        if self.invoice.rounding_result:
             path = self.pdf.beginPath()
             path.moveTo(LEFT * mm, (TOP - i) * mm)
             path.lineTo((LEFT + 176) * mm, (TOP - i) * mm)
