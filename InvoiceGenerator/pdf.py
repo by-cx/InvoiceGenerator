@@ -199,8 +199,8 @@ class SimpleInvoice(BaseInvoice):
                     self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
                 else:
                     self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.1f %s' % (item.count, item.unit))
-                self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.price, self.invoice.currency))
-                self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.total, self.invoice.currency))
+                self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
+                self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 i+=5
 
         if self.invoice.rounding_result:
