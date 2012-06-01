@@ -199,3 +199,9 @@ class InvoiceTest(unittest.TestCase):
 
         self.assertEquals(expected, invoice.generate_breakdown_vat_table())
 
+    def test_difference_rounding(self):
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        invoice.add_item(Item(1, 2.5, tax=50))
+
+        self.assertEquals(0.25, invoice.difference_in_rounding)
+

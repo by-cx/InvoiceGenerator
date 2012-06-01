@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-07 17:30+0200\n"
+"POT-Creation-Date: 2012-05-27 11:57+CEST\n"
 "PO-Revision-Date: 2012-04-22 14:33+0100\n"
 "Last-Translator: rbas <rbas@rbas.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,110 +17,115 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
 
-#: pdf.py:73
-msgid "Invoice"
-msgstr "Faktura"
-
-#: pdf.py:76
-msgid "Variable symbol: %s"
-msgstr "Variabilní symbol: %s"
-
-#: pdf.py:100
-msgid "Customer"
-msgstr "Odběratel"
-
-#: pdf.py:113
-msgid "Provider"
-msgstr "Poskytovatel"
-
-#: pdf.py:130
-msgid "Payment information"
-msgstr "Platební informace"
-
-#: pdf.py:135
-msgid "Bank account"
-msgstr "Bankovní účet"
-
-#: pdf.py:136
-msgid "Variable symbol"
-msgstr "Variabilní symbol"
-
-msgid "Specific symbol"
-msgstr "Specifický symbol"
-
-#: pdf.py:149
-msgid "List of items"
-msgstr "Seznam položek"
-
-#: pdf.py:151
-msgid "Description"
-msgstr "Popis"
-
-#: pdf.py:154
-#: pdf.py:167
-msgid "Units"
-msgstr "Jednotek"
-
-#: pdf.py:156
-#: pdf.py:169
-msgid "Price per one"
-msgstr "Cena za jednotku"
-
-#: pdf.py:158
-#: pdf.py:171
-msgid "Total price"
-msgstr "Celková cena"
-
-#: pdf.py:160
-msgid "Tax"
-msgstr "DPH"
-
-#: pdf.py:162
-msgid "Total price with tax"
-msgstr "Celková cena s daní"
-
-#: pdf.py:206
-msgid "Total"
-msgstr "Celkem"
-
-#: pdf.py:208
-msgid "Total with tax"
-msgstr "Celkem s DPH"
-
-#: pdf.py:225
-msgid "Creator"
-msgstr "Vytvořil"
-
-#: pdf.py:230
-msgid "Date"
-msgstr "Datum"
-
-#: pdf.py:231
-msgid "Payback"
-msgstr "Splatnost"
-
-msgid "Taxable date"
-msgstr "Datum zdanitelného plnění"
-
-#: pdf.py:232
-msgid "Paytype"
-msgstr "Typ platby"
-
-msgid "Breakdown VAT"
-msgstr "Rozpis DPH"
-
-msgid "VAT rate"
-msgstr "Sazba"
-
-msgid "Without VAT"
-msgstr "Bez DPH"
-
-msgid "With VAT"
-msgstr "S DPH"
-
+#: api.py:41
 msgid "Vat in: %s"
 msgstr "DIČ: %s"
 
+#: api.py:44
 msgid "IR: %s"
 msgstr "IČ: %s"
+
+#: pdf.py:68
+msgid "Variable symbol: %s"
+msgstr "Variabilní symbol: %s"
+
+#: pdf.py:92
+msgid "Customer"
+msgstr "Odběratel"
+
+#: pdf.py:112
+msgid "Provider"
+msgstr "Poskytovatel"
+
+#: pdf.py:131
+msgid "Payment information"
+msgstr "Platební informace"
+
+#: pdf.py:136
+msgid "Bank account"
+msgstr "Bankovní účet"
+
+#: pdf.py:137
+msgid "Variable symbol"
+msgstr "Variabilní symbol"
+
+#: pdf.py:141
+msgid "Specific symbol"
+msgstr "Specifický symbol"
+
+#: pdf.py:153
+msgid "List of items"
+msgstr "Seznam položek"
+
+#: pdf.py:155
+msgid "Description"
+msgstr "Popis"
+
+#: pdf.py:159 pdf.py:172
+msgid "Units"
+msgstr "Jednotek"
+
+#: pdf.py:161 pdf.py:174
+msgid "Price per one"
+msgstr "Cena za jednotku"
+
+#: pdf.py:163 pdf.py:176
+msgid "Total price"
+msgstr "Celková cena"
+
+#: pdf.py:165 pdf.py:227
+msgid "Tax"
+msgstr "DPH"
+
+#: pdf.py:167
+msgid "Total price with tax"
+msgstr "Celková cena s daní"
+
+#: pdf.py:212
+msgid "Rounding"
+msgstr "Haléřové vyrovnání"
+
+#: pdf.py:223
+msgid "Total"
+msgstr "Celkem"
+
+#: pdf.py:226
+msgid "Breakdown VAT"
+msgstr "Rozpis DPH"
+
+#: pdf.py:227
+msgid "VAT rate"
+msgstr "Sazba"
+
+#: pdf.py:227
+msgid "With VAT"
+msgstr "S DPH"
+
+#: pdf.py:227
+msgid "Without VAT"
+msgstr "Bez DPH"
+
+#: pdf.py:255
+msgid "Total with tax"
+msgstr "Celkem s DPH"
+
+#: pdf.py:272
+msgid "Creator"
+msgstr "Vytvořil"
+
+#: pdf.py:279
+msgid "Date"
+msgstr "Datum"
+
+#: pdf.py:280
+msgid "Payback"
+msgstr "Splatnost"
+
+#: pdf.py:285
+msgid "Taxable date"
+msgstr "Datum zdanitelného plnění"
+
+#: pdf.py:288
+msgid "Paytype"
+msgstr "Typ platby"
 
