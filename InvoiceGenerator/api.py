@@ -130,6 +130,8 @@ class Invoice(UnicodeProperty):
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
               'currency', 'date', 'payback', 'taxable_date')
 
+    rounding_result = False
+
     def __init__(self, client, provider, creator):
         assert isinstance(client, Client)
         assert isinstance(provider, Provider)
@@ -145,11 +147,11 @@ class Invoice(UnicodeProperty):
 
     @property
     def price(self):
-        return sum([item.total for item in self._items])
+        return self._round_result(sum([item.total for item in self.items]))
 
     @property
     def price_tax(self):
-        return sum([item.total_tax for item in self._items])
+        return self._round_result(sum([item.total_tax for item in self.items]))
 
     def add_item(self, item):
         assert isinstance(item, Item)
@@ -168,6 +170,11 @@ class Invoice(UnicodeProperty):
                 continue
         return use_tax
 
+    @property
+    def difference_in_rounding(self):
+        price = sum([item.total_tax for item in self.items])
+        return round(price, 0) - price
+
     def _get_grouped_items_by_tax(self):
         table = {}
         for item in self.items:
@@ -179,6 +186,11 @@ class Invoice(UnicodeProperty):
                 table[item.tax]['tax'] +=  item.count_tax()
 
         return table
+
+    def _round_result(self, price):
+        if self.rounding_result:
+            price = round(price, 0)
+        return price
 
     def generate_breakdown_vat(self):
         return self._get_grouped_items_by_tax()

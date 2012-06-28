@@ -39,12 +39,15 @@ class TestBaseInvoice(unittest.TestCase):
         client.note = u'zapsaná v obchodním rejstříku vedeném městským soudem v Praze,\noddíl C, vložka 176551'
 
         invoice = Invoice(client, provider, Creator('blah'))
-        invoice.add_item(Item(32, 600, tax=50))
-        invoice.add_item(Item(32, 600, tax=0))
+        invoice.add_item(Item(32, 600.6, tax=50))
+        invoice.add_item(Item(32, 2.5, tax=20))
+        invoice.add_item(Item(5, 25.42, tax=20))
+        invoice.add_item(Item(5, 25.42, tax=0))
         invoice.specific_symbol = 666
         invoice.taxable_date = '1.1.1979'
         invoice.variable_symbol = '000000001'
         invoice.currency = u'Kč'
+        invoice.rounding_result = True
 
 
         tmp_file = NamedTemporaryFile()

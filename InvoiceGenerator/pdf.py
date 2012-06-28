@@ -188,10 +188,10 @@ class SimpleInvoice(BaseInvoice):
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
                 else:
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.1f %s' % (item.count, item.unit))
-                self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.price, self.invoice.currency))
-                self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.total, self.invoice.currency))
+                self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
+                self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 self.pdf.drawString((LEFT + 137) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
-                self.pdf.drawString((LEFT + 146) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.total_tax, self.invoice.currency))
+                self.pdf.drawString((LEFT + 146) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total_tax, self.invoice.currency))
                 i+=5
             else:
                 if len(item.description) > 75: i+=5
@@ -199,9 +199,19 @@ class SimpleInvoice(BaseInvoice):
                     self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
                 else:
                     self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.1f %s' % (item.count, item.unit))
-                self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.price, self.invoice.currency))
-                self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.0f,- %s' % (item.total, self.invoice.currency))
+                self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
+                self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 i+=5
+
+        if self.invoice.rounding_result:
+            path = self.pdf.beginPath()
+            path.moveTo(LEFT * mm, (TOP - i) * mm)
+            path.lineTo((LEFT + 176) * mm, (TOP - i) * mm)
+            i += 5
+            self.pdf.drawPath(path, True, True)
+            self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, _(u'Rounding'))
+            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f,- %s' % (self.invoice.difference_in_rounding, self.invoice.currency))
+            i += 3
 
         path = self.pdf.beginPath()
         path.moveTo(LEFT * mm, (TOP - i) * mm)
