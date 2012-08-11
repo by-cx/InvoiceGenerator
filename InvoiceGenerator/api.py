@@ -99,7 +99,10 @@ class Item(object):
 
     @count.setter
     def count(self, value):
-        self._count = int(value)
+        try:
+            self._count = int(value)
+        except TypeError:
+            self._count = 0
 
     @property
     def price(self):
@@ -107,7 +110,10 @@ class Item(object):
 
     @price.setter
     def price(self, value):
-        self._price = float(value)
+        try:
+            self._price = float(value)
+        except TypeError:
+            self._price = 0.0
 
     @property
     def unit(self):
@@ -123,7 +129,10 @@ class Item(object):
 
     @tax.setter
     def tax(self, value):
-        self._tax = float(value)
+        try:
+            self._tax = float(value)
+        except TypeError:
+            self._tax = 0.0
 
 
 class Invoice(UnicodeProperty):
