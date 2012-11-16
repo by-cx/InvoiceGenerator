@@ -40,6 +40,7 @@ class SimpleInvoice(BaseInvoice):
 
         # Texty
         self.drawMain()
+        self.drawTitle()
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
@@ -60,14 +61,15 @@ class SimpleInvoice(BaseInvoice):
         pdf.setTitle(self.invoice.title)
         pdf.setAuthor(self.invoice.creator.name)
 
-    def drawMain(self):
+    def drawTitle(self):
         # Up line
         self.pdf.drawString(self.LEFT*mm, self.TOP*mm, self.invoice.title)
         self.pdf.drawString((self.LEFT + 90) * mm,
-                            self.TOP*mm,
-                            _(u'Variable symbol: %s') %
-                            self.invoice.variable_symbol)
+            self.TOP*mm,
+            _(u'Variable symbol: %s') %
+            self.invoice.variable_symbol)
 
+    def drawMain(self):
         # Borders
         self.pdf.rect(self.LEFT * mm, (self.TOP - 68) * mm,
                       (self.LEFT + 156) * mm, 65 * mm, stroke=True, fill=False)
@@ -293,3 +295,46 @@ class SimpleInvoice(BaseInvoice):
             top += -5
 
 
+class CorrectingInvoice(SimpleInvoice):
+    def gen(self, filename):
+        self.TOP = 260
+        self.LEFT = 20
+        self.filename = filename
+
+        pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
+        pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
+
+        self.pdf = Canvas(self.filename, pagesize = letter)
+        self.addMetaInformation(self.pdf)
+
+        self.pdf.setFont('DejaVu', 15)
+        self.pdf.setStrokeColorRGB(0, 0, 0)
+
+        # Texty
+        self.drawMain()
+        self.drawTitle()
+        self.drawProvider(self.TOP - 10,self.LEFT + 3)
+        self.drawClient(self.TOP - 35,self.LEFT + 91)
+        self.drawPayment(self.TOP - 47,self.LEFT + 3)
+        self.drawCorretion(self.TOP - 73,self.LEFT)
+        self.drawItems(self.TOP - 82,self.LEFT)
+        self.drawDates(self.TOP - 10,self.LEFT + 91)
+
+        #self.pdf.setFillColorRGB(0, 0, 0)
+
+        self.pdf.showPage()
+        self.pdf.save()
+
+    def drawTitle(self):
+        # Up line
+        self.pdf.drawString(self.LEFT*mm, self.TOP*mm, self.invoice.title)
+        self.pdf.drawString((self.LEFT + 90) * mm,
+            self.TOP*mm,
+            _(u'Correcting document: %s') %
+            self.invoice.number)
+
+
+    def drawCorretion(self,TOP,LEFT):
+        self.pdf.setFont('DejaVu', 8)
+        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Correction document for invoice: %s') % self.invoice.variable_symbol)
+        self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, _(u'Reason to correction: %s') % self.invoice.reason)

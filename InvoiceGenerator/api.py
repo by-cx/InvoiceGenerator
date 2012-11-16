@@ -210,3 +210,10 @@ class Invoice(UnicodeProperty):
              rows.append((vat, items['total'], items['total_tax'], items['tax']))
 
         return rows
+
+class Correction(Invoice):
+    _attrs = ('number', 'reason', 'title', 'variable_symbol', 'specific_symbol', 'paytype',
+              'currency', 'date', 'payback', 'taxable_date')
+
+    def __init__(self, client, provider, creator):
+        super(Correction, self).__init__(client, provider, creator)
