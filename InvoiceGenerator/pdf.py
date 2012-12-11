@@ -98,7 +98,7 @@ class SimpleInvoice(BaseInvoice):
         text.textLines('\n'.join(self.invoice.client.get_address_lines()))
         self.pdf.drawText(text)
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 20) * mm)
+        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
         text.textLines('\n'.join(self.invoice.client.get_contact_lines()))
         self.pdf.drawText(text)
 
