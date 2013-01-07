@@ -26,4 +26,5 @@ setup(
     install_requires=[
         "reportlab", "PIL"
         ],
+    package_data={'InvoiceGenerator': ['locale/cs/LC_MESSAGES/*']},
 )
