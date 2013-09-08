@@ -9,7 +9,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
 
 from conf import _, FONT_PATH, FONT_BOLD_PATH
-from api import Invoice
+from api import Invoice, QrCodeBuilder
 
 class BaseInvoice(object):
 
@@ -24,10 +24,16 @@ class BaseInvoice(object):
 
 class SimpleInvoice(BaseInvoice):
 
-    def gen(self, filename):
+    def gen(self, filename, generate_qr_code=False):
         self.TOP = 260
         self.LEFT = 20
         self.filename = filename
+        if generate_qr_code:
+            qr_builder = QrCodeBuilder(self.invoice)
+        else:
+            qr_builder = None
+
+        self.qr_builder = qr_builder
 
         pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
         pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
@@ -51,6 +57,8 @@ class SimpleInvoice(BaseInvoice):
 
         self.pdf.showPage()
         self.pdf.save()
+        if self.qr_builder:
+            self.qr_builder.destroy()
 
     #############################################################
     ## Draw methods
@@ -265,6 +273,14 @@ class SimpleInvoice(BaseInvoice):
             im = Image.open(self.invoice.creator.stamp_filename)
             height = float(im.size[1]) / (float(im.size[0])/200.0)
             self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT + 98) * mm, (TOP - i - 72) * mm, 200, height)
+
+        if self.qr_builder:
+            qr_filename = self.qr_builder.filename
+            im = Image.open(qr_filename)
+            height = float(im.size[1]) / (float(im.size[0]) / 200.0)
+            self.pdf.drawImage(qr_filename, LEFT * mm, (TOP - i - 100) * mm,
+                               200, height)
+
 
         path = self.pdf.beginPath()
         path.moveTo((LEFT + 110) * mm, (TOP - i - 70) * mm)

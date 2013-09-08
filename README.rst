@@ -27,17 +27,21 @@ Usage::
 
 	from tempfile import NamedTemporaryFile
 
-	from InvoiceGenerator.generator import Generator
 	from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator
 	from InvoiceGenerator.pdf import SimpleInvoice
 
 
-	invoice = Invoice(Client('Client company'), Provider('My company'), Creator('John Doe'))
+	client = Client('Client company')
+	provider = Provider('My company', bank_account='2600420569/2010')
+	creator = Creator('John Doe')
+
+	invoice = Invoice(client, provider, creator)
 	invoice.add_item(Item(32, 600))
 	invoice.add_item(Item(60, 50, tax=10))
 	invoice.add_item(Item(50, 60, tax=5))
 	invoice.add_item(Item(5, 600, tax=50))
 
 	tmp_file = NamedTemporaryFile()
-	Generator(invoice).gen(tmp_file.name, SimpleInvoice)
+	pdf = SimpleInvoice(invoice)
+	pdf.gen(tmp_file.name, generate_qr_code=True)
 

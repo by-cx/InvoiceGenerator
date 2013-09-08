@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from PIL import Image
+import qrcode
 
 from conf import _
 
@@ -217,3 +219,47 @@ class Correction(Invoice):
 
     def __init__(self, client, provider, creator):
         super(Correction, self).__init__(client, provider, creator)
+
+
+class QrCodeBuilder(object):
+
+    def __init__(self, invoice):
+        """
+        :param invoice: Invoice
+        """
+        self.invoice = invoice
+        self.qr = self._fill(invoice)
+        self.tmp_file = None
+
+    def _fill(self, invoice):
+        from qrplatba import QRPlatbaGenerator
+
+        qr_kwargs = {
+            'account': invoice.provider.bank_account,
+            'amount': invoice.price_tax,
+        }
+        if invoice.variable_symbol:
+            qr_kwargs['x_vs'] = invoice.variable_symbol
+        if invoice.variable_symbol:
+            qr_kwargs['x_ss'] = invoice.specific_symbol
+        if invoice.payback:
+            qr_kwargs['due_date'] = invoice.payback
+        
+        return QRPlatbaGenerator(**qr_kwargs)
+
+    @property
+    def filename(self):
+        from tempfile import NamedTemporaryFile
+        img = qrcode.make(self.qr.get_text())
+
+        self.tmp_file = NamedTemporaryFile(mode='w+b', suffix='.png',
+                                           delete=False)
+        img.save(self.tmp_file)
+        self.tmp_file.close()
+        return self.tmp_file.name
+
+    def destroy(self):
+        if hasattr(self.tmp_file, 'name'):
+            import os
+            os.unlink(self.tmp_file.name)
+
