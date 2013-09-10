@@ -70,7 +70,7 @@ class Creator(UnicodeProperty):
 class Item(object):
 
     def __init__(self, count, price, description='', unit='', tax=0.0):
-        self._count = int(count)
+        self._count = float(count)
         self._price = float(price)
         self._description = unicode(description)
         self._unit = unicode(unit)

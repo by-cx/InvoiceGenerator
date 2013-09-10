@@ -195,9 +195,9 @@ class SimpleInvoice(BaseInvoice):
                 items_are_with_tax = True
                 if len(item.description) > 52: i+=5
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
+                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 else:
-                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.1f %s' % (item.count, item.unit))
+                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
                 self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 self.pdf.drawString((LEFT + 137) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
@@ -206,9 +206,9 @@ class SimpleInvoice(BaseInvoice):
             else:
                 if len(item.description) > 75: i+=5
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%d %s' % (item.count, item.unit))
+                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 else:
-                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.1f %s' % (item.count, item.unit))
+                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
                 self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 i+=5
