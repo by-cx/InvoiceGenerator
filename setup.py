@@ -39,5 +39,5 @@ setup(
     install_requires=[
         "reportlab", "PIL", "qrplatba>=0.3.3"
         ],
-    package_data={'InvoiceGenerator': ['locale/cs/LC_MESSAGES/*']},
+    package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
 )
