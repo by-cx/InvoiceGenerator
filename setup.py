@@ -1,15 +1,28 @@
 #!/usr/bin/python
 
 import os
+import sys
+import subprocess
+import shlex
 from setuptools import setup, find_packages
 import InvoiceGenerator
+
+version = InvoiceGenerator.__versionstr__
+
+# release a version, publish to GitHub and PyPI
+if sys.argv[-1] == 'publish':
+    command = lambda cmd: subprocess.check_call(shlex.split(cmd))
+    command('git tag v' + version)
+    command('git push --tags origin master:master')
+    command('python setup.py sdist upload')
+    sys.exit()
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "InvoiceGenerator",
-    version = InvoiceGenerator.__versionstr__,
+    version =version,
     author = "Adam Strauch",
     author_email = "cx@initd.cz",
     description = ("Library to generate PDF invoice."),
