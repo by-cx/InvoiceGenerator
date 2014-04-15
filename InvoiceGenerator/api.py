@@ -102,7 +102,7 @@ class Item(object):
     @count.setter
     def count(self, value):
         try:
-            self._count = int(value)
+            self._count = float(value)
         except TypeError:
             self._count = 0
 
