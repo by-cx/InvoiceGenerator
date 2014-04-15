@@ -68,7 +68,7 @@ class ItemTest(unittest.TestCase):
     def test_check_data_types_set_in_constructor(self):
         item = Item('42', '666', 'Item description', 'hour', '1.1')
 
-        self.assertIsInstance(item.count, int)
+        self.assertIsInstance(item.count, float)
         self.assertIsInstance(item.price, float)
         self.assertIsInstance(item.description, unicode)
         self.assertIsInstance(item.unit, unicode)
@@ -83,7 +83,7 @@ class ItemTest(unittest.TestCase):
         item.unit = 'hour'
         item.tax = '99.9'
 
-        self.assertIsInstance(item.count, int)
+        self.assertIsInstance(item.count, float)
         self.assertIsInstance(item.price, float)
         self.assertIsInstance(item.description, unicode)
         self.assertIsInstance(item.unit, unicode)

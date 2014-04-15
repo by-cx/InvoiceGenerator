@@ -103,17 +103,17 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.setFont('DejaVu', 8)
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 4) * mm)
-        text.textLines('\n'.join(self.invoice.client.get_address_lines()))
+        text.textLines(self.invoice.client.get_address_lines())
         self.pdf.drawText(text)
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
-        text.textLines('\n'.join(self.invoice.client.get_contact_lines()))
+        text.textLines(self.invoice.client.get_contact_lines())
         self.pdf.drawText(text)
 
         if self.invoice.client.note:
             self.pdf.setFont('DejaVu', 6)
             text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 28) * mm)
-            text.textLines(self.invoice.client.note)
+            text.textLines(self.invoice.client.note.split("\n"))
             self.pdf.drawText(text)
 
 
@@ -123,17 +123,17 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.setFont('DejaVu', 8)
 
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
-        text.textLines('\n'.join(self.invoice.provider.get_address_lines()))
+        text.textLines(self.invoice.provider.get_address_lines())
         self.pdf.drawText(text)
 
         text = self.pdf.beginText((LEFT + 40) * mm, (TOP - 6) * mm)
-        text.textLines('\n'.join(self.invoice.provider.get_contact_lines()))
+        text.textLines(self.invoice.provider.get_contact_lines())
 
         self.pdf.drawText(text)
         if self.invoice.provider.note:
             self.pdf.setFont('DejaVu', 6)
             text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
-            text.textLines(self.invoice.provider.note)
+            text.textLines(self.invoice.provider.note.split("\n"))
             self.pdf.drawText(text)
 
     def drawPayment(self,TOP,LEFT):
@@ -149,7 +149,7 @@ class SimpleInvoice(BaseInvoice):
         if self.invoice.specific_symbol:
             lines.append(
                 '%s: %s' % (_(u'Specific symbol'), self.invoice.specific_symbol))
-        text.textLines('\n'.join(lines))
+        text.textLines(lines)
         self.pdf.drawText(text)
 
     def drawItems(self,TOP,LEFT):
@@ -244,19 +244,19 @@ class SimpleInvoice(BaseInvoice):
 
             self.pdf.setFont('DejaVu', 6)
             text = self.pdf.beginText((LEFT + 1) * mm, (TOP - i - 5) * mm)
-            text.textLines('\n'.join(vat_list))
+            text.textLines(vat_list)
             self.pdf.drawText(text)
 
             text = self.pdf.beginText((LEFT + 11) * mm, (TOP - i - 5) * mm)
-            text.textLines('\n'.join(tax_list))
+            text.textLines(tax_list)
             self.pdf.drawText(text)
 
             text = self.pdf.beginText((LEFT + 27) * mm, (TOP - i - 5) * mm)
-            text.textLines('\n'.join(total_list))
+            text.textLines(total_list)
             self.pdf.drawText(text)
 
             text = self.pdf.beginText((LEFT + 45) * mm, (TOP - i - 5) * mm)
-            text.textLines('\n'.join(total_tax_list))
+            text.textLines(total_tax_list)
             self.pdf.drawText(text)
 
 
