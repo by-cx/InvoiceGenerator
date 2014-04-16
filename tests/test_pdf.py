@@ -49,6 +49,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.taxable_date = '1.1.1979'
         invoice.variable_symbol = '000000001'
         invoice.currency = u'Kč'
+        invoice.currency_locale = 'cs_CZ.UTF-8'
         invoice.rounding_result = True
 
 
@@ -69,6 +70,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.add_item(Item(60, 50, tax=10))
         invoice.add_item(Item(50, 60, tax=5))
         invoice.add_item(Item(5, 600, tax=50))
+        invoice.currency_locale = 'en_US.UTF-8'
 
         tmp_file = NamedTemporaryFile()
 

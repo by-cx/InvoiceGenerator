@@ -139,7 +139,7 @@ class Item(object):
 
 class Invoice(UnicodeProperty):
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'date', 'payback', 'taxable_date')
+              'currency', 'currency_locale', 'date', 'payback', 'taxable_date')
 
     rounding_result = False
 
@@ -215,7 +215,7 @@ class Invoice(UnicodeProperty):
 
 class Correction(Invoice):
     _attrs = ('number', 'reason', 'title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'date', 'payback', 'taxable_date')
+              'currency', 'currency_locale', 'date', 'payback', 'taxable_date')
 
     def __init__(self, client, provider, creator):
         super(Correction, self).__init__(client, provider, creator)
