@@ -194,6 +194,12 @@ class SimpleInvoice(BaseInvoice):
         i = self.drawItemsHeader(TOP, LEFT)
         self.pdf.setFont('DejaVu', 7)
 
+        items_are_with_tax = False
+        for item in self.invoice.items:
+            if item.tax:
+                items_are_with_tax = True
+                break
+
         # List
         will_wrap = False
         for item in self.invoice.items:
@@ -209,8 +215,7 @@ class SimpleInvoice(BaseInvoice):
                 TOP = self.TOP
                 self.pdf.setFont('DejaVu', 7)
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
-            if item.tax or items_are_with_tax:
-                items_are_with_tax = True
+            if items_are_with_tax:
                 if len(item.description) > 52: i+=5
                 if float(int(item.count)) == item.count:
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%i %s' % (item.count, item.unit))
