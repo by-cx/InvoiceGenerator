@@ -4,6 +4,8 @@ from PIL import Image
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.platypus import Paragraph
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
@@ -214,9 +216,15 @@ class SimpleInvoice(BaseInvoice):
                 i = self.drawItemsHeader(self.TOP, LEFT)
                 TOP = self.TOP
                 self.pdf.setFont('DejaVu', 7)
-            self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
+            if len(item.description) > (52 if items_are_with_tax else 75):
+                style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
+                p = Paragraph(item.description, style)
+                pwidth, pheight = p.wrapOn(self.pdf, 175*mm, 30*mm)
+                i += float(pheight)/mm
+                p.drawOn(self.pdf, (LEFT + 1) * mm, (TOP - i + 3) * mm)
+            else:
+                self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
             if items_are_with_tax:
-                if len(item.description) > 52: i+=5
                 if float(int(item.count)) == item.count:
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%i %s' % (item.count, item.unit))
                 else:
@@ -227,7 +235,6 @@ class SimpleInvoice(BaseInvoice):
                 self.pdf.drawString((LEFT + 146) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total_tax, self.invoice.currency))
                 i+=5
             else:
-                if len(item.description) > 75: i+=5
                 if float(int(item.count)) == item.count:
                     self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 else:
