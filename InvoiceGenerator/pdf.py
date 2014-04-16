@@ -50,8 +50,9 @@ class SimpleInvoice(BaseInvoice):
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
-        self.drawItems(self.TOP - 80,self.LEFT)
+        self.drawQR(self.TOP - 39.5, self.LEFT + 59, 80.0)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
+        self.drawItems(self.TOP - 80,self.LEFT)
 
         #self.pdf.setFillColorRGB(0, 0, 0)
 
@@ -143,7 +144,7 @@ class SimpleInvoice(BaseInvoice):
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
         lines = [
             self.invoice.provider.bank_name,
-            '%s: %s' % (_(u'Bank account'), self.invoice.provider.bank_account),
+            '%s: %s' % (_(u'Account n.'), self.invoice.provider.bank_account),
             '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol)
         ]
         if self.invoice.specific_symbol:
@@ -152,8 +153,8 @@ class SimpleInvoice(BaseInvoice):
         text.textLines(lines)
         self.pdf.drawText(text)
 
-    def drawItems(self,TOP,LEFT):
-        # Items
+
+    def drawItemsHeader(self, TOP, LEFT):
         path = self.pdf.beginPath()
         path.moveTo(LEFT * mm, (TOP - 4) * mm)
         path.lineTo((LEFT + 176) * mm, (TOP - 4) * mm)
@@ -185,11 +186,28 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm,
                                 _(u'Total price'))
             i+=5
+        return i
 
+
+    def drawItems(self,TOP,LEFT):
+        # Items
+        i = self.drawItemsHeader(TOP, LEFT)
         self.pdf.setFont('DejaVu', 7)
 
         # List
+        will_wrap = False
         for item in self.invoice.items:
+            if TOP - i < 30 * mm:
+                will_wrap = True
+
+            if will_wrap and TOP - i < 8 * mm:
+                will_wrap = False
+                self.pdf.rect(LEFT * mm, (TOP - i) * mm, (LEFT + 156) * mm, (i + 2) * mm, stroke=True, fill=False) #140,142
+                self.pdf.showPage()
+
+                i = self.drawItemsHeader(self.TOP, LEFT)
+                TOP = self.TOP
+                self.pdf.setFont('DejaVu', 7)
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
             if item.tax or items_are_with_tax:
                 items_are_with_tax = True
@@ -212,6 +230,14 @@ class SimpleInvoice(BaseInvoice):
                 self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
                 self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
                 i+=5
+
+        if will_wrap:
+            self.pdf.rect(LEFT * mm, (TOP - i) * mm, (LEFT + 156) * mm, (i + 2) * mm, stroke=True, fill=False) #140,142
+            self.pdf.showPage()
+
+            i=0
+            TOP = self.TOP
+            self.pdf.setFont('DejaVu', 7)
 
         if self.invoice.rounding_result:
             path = self.pdf.beginPath()
@@ -269,25 +295,31 @@ class SimpleInvoice(BaseInvoice):
         else:
             self.pdf.rect(LEFT * mm, (TOP - i - 11) * mm, (LEFT + 156) * mm, (i + 13) * mm, stroke=True, fill=False) #140,142
 
+        self.drawCreator(TOP - i - 20, self.LEFT + 98)
+
+
+    def drawCreator(self, TOP, LEFT):
+        height = 20*mm
         if self.invoice.creator.stamp_filename:
             im = Image.open(self.invoice.creator.stamp_filename)
             height = float(im.size[1]) / (float(im.size[0])/200.0)
-            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT + 98) * mm, (TOP - i - 72) * mm, 200, height)
+            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT) * mm, (TOP - 2) * mm - height, 200, height)
 
+        path = self.pdf.beginPath()
+        path.moveTo((LEFT + 8) * mm, (TOP) * mm - height)
+        path.lineTo((LEFT + 62) * mm, (TOP) * mm - height)
+        self.pdf.drawPath(path, True, True)
+
+        self.pdf.drawString((LEFT + 10) * mm, (TOP - 5) * mm - height, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
+
+
+    def drawQR(self, TOP, LEFT, size=130.0):
         if self.qr_builder:
             qr_filename = self.qr_builder.filename
             im = Image.open(qr_filename)
-            height = float(im.size[1]) / (float(im.size[0]) / 200.0)
-            self.pdf.drawImage(qr_filename, LEFT * mm, (TOP - i - 100) * mm,
-                               200, height)
-
-
-        path = self.pdf.beginPath()
-        path.moveTo((LEFT + 110) * mm, (TOP - i - 70) * mm)
-        path.lineTo((LEFT + 164) * mm, (TOP - i - 70) * mm)
-        self.pdf.drawPath(path, True, True)
-
-        self.pdf.drawString((LEFT + 112) * mm, (TOP - i - 75) * mm, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
+            height = float(im.size[1]) / (float(im.size[0]) / size)
+            self.pdf.drawImage(qr_filename, LEFT * mm, TOP * mm - height,
+                               size, height)
 
 
     def drawDates(self,TOP,LEFT):
@@ -333,8 +365,8 @@ class CorrectingInvoice(SimpleInvoice):
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
         self.drawCorretion(self.TOP - 73,self.LEFT)
-        self.drawItems(self.TOP - 82,self.LEFT)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
+        self.drawItems(self.TOP - 82,self.LEFT)
 
         #self.pdf.setFillColorRGB(0, 0, 0)
 

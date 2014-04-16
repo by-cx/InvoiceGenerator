@@ -45,8 +45,8 @@ msgid "Payment information"
 msgstr "Platební informace"
 
 #: pdf.py:138
-msgid "Bank account"
-msgstr "Bankovní účet"
+msgid "Account n."
+msgstr "Č. účtu"
 
 #: pdf.py:139
 msgid "Variable symbol"
