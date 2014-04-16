@@ -195,7 +195,7 @@ class SimpleInvoice(BaseInvoice):
                 items_are_with_tax = True
                 if len(item.description) > 52: i+=5
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
+                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%i %s' % (item.count, item.unit))
                 else:
                     self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
                 self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
