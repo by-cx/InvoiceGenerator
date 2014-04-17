@@ -26,6 +26,30 @@ class BaseInvoice(object):
         pass
 
 
+class NumberedCanvas(Canvas):
+    def __init__(self, *args, **kwargs):
+        Canvas.__init__(self, *args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_number(num_pages)
+            Canvas.showPage(self)
+        Canvas.save(self)
+
+    def draw_page_number(self, page_count):
+        self.setFont("DejaVu", 7)
+        self.drawRightString(200*mm, 20*mm,
+            _("Page %(page_number)d of %(page_count)d") % {"page_number": self._pageNumber, "page_count": page_count})
+
+
 def prepare_invoice_draw(self):
     self.TOP = 260
     self.LEFT = 20
@@ -33,7 +57,7 @@ def prepare_invoice_draw(self):
     pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
     pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
 
-    self.pdf = Canvas(self.filename, pagesize = letter)
+    self.pdf = NumberedCanvas(self.filename, pagesize = letter)
     self.addMetaInformation(self.pdf)
 
     self.pdf.setFont('DejaVu', 15)
