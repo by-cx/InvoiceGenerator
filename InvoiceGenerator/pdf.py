@@ -199,7 +199,7 @@ class SimpleInvoice(BaseInvoice):
         items_are_with_tax = self.invoice.use_tax
         if items_are_with_tax:
             i=9
-            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, _(u'Units'))
+            self.pdf.drawString((LEFT + 73) * mm, (TOP - i) * mm, _(u'Units'))
             self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm,
                                 _(u'Price per one'))
             self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm,
@@ -242,19 +242,26 @@ class SimpleInvoice(BaseInvoice):
                 i = self.drawItemsHeader(self.TOP, LEFT)
                 TOP = self.TOP
                 self.pdf.setFont('DejaVu', 7)
-            if len(item.description) > (52 if items_are_with_tax else 75):
-                style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
-                p = Paragraph(item.description, style)
-                pwidth, pheight = p.wrapOn(self.pdf, 175*mm, 30*mm)
-                i += float(pheight)/mm
-                p.drawOn(self.pdf, (LEFT + 1) * mm, (TOP - i + 3) * mm)
-            else:
-                self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
+
+            #leading line
+            path = self.pdf.beginPath()
+            path.moveTo(LEFT * mm, (TOP - i + 3.5) * mm)
+            path.lineTo((LEFT + 176) * mm, (TOP - i + 3.5) * mm)
+            self.pdf.setLineWidth(0.1)
+            self.pdf.drawPath(path, True, True)
+            self.pdf.setLineWidth(1)
+
+            style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
+            p = Paragraph(item.description, style)
+            pwidth, pheight = p.wrapOn(self.pdf, 70*mm if items_are_with_tax else 90*mm, 30*mm)
+            i += max(float(pheight)/mm, 4.23)
+            p.drawOn(self.pdf, (LEFT + 1) * mm, (TOP - i + 3) * mm)
+            i -= 4.23
             if items_are_with_tax:
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawRightString((LEFT + 80) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%i", item.count, grouping=True)), item.unit))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%i", item.count, grouping=True)), item.unit))
                 else:
-                    self.pdf.drawRightString((LEFT + 80) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%.2f", item.count, grouping=True)), item.unit))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%.2f", item.count, grouping=True)), item.unit))
                 self.pdf.drawRightString((LEFT + 110) * mm, (TOP - i) * mm, currency(item.price))
                 self.pdf.drawRightString((LEFT + 134) * mm, (TOP - i) * mm, currency(item.total))
                 self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f%%' % item.tax)
