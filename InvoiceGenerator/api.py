@@ -16,10 +16,12 @@ class UnicodeProperty(object):
 
 class Address(UnicodeProperty):
     _attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
-              'bank_name', 'bank_account', 'note', 'vat_id', 'ir')
+              'bank_name', 'bank_account', 'note', 'vat_id', 'ir',
+              'logo_filename')
 
     def __init__(self, summary, address='', city='', zip='', phone='', email='',
-               bank_name='', bank_account='', note='', vat_id='', ir=''):
+               bank_name='', bank_account='', note='', vat_id='', ir='',
+               logo_filename=''):
         self.summary = summary
         self.address = address
         self.city = city
@@ -31,6 +33,7 @@ class Address(UnicodeProperty):
         self.note = note
         self.vat_id = vat_id
         self.ir = ir
+        self.logo_filename = logo_filename
 
 
     def get_address_lines(self):

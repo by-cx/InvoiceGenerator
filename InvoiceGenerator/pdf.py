@@ -163,6 +163,12 @@ class SimpleInvoice(BaseInvoice):
             text.textLines(self.invoice.provider.note.split("\n"))
             self.pdf.drawText(text)
 
+        if self.invoice.provider.logo_filename:
+            im = Image.open(self.invoice.provider.logo_filename)
+            height = 30.0
+            width = float(im.size[0]) / (float(im.size[1])/height)
+            self.pdf.drawImage(self.invoice.provider.logo_filename, (LEFT + 84) * mm - width, (TOP - 4) * mm, width, height)
+
     def drawPayment(self,TOP,LEFT):
         self.pdf.setFont('DejaVu-Bold', 9)
         self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Payment information'))
