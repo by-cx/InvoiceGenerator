@@ -216,11 +216,7 @@ class SimpleInvoice(BaseInvoice):
         i = self.drawItemsHeader(TOP, LEFT)
         self.pdf.setFont('DejaVu', 7)
 
-        items_are_with_tax = False
-        for item in self.invoice.items:
-            if item.tax:
-                items_are_with_tax = True
-                break
+        items_are_with_tax = self.invoice.use_tax
 
         # List
         will_wrap = False
