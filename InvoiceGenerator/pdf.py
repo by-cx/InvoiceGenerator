@@ -290,7 +290,7 @@ class SimpleInvoice(BaseInvoice):
                     self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%.2f", item.count, grouping=True)), item.unit))
                 self.pdf.drawRightString((LEFT + 110) * mm, (TOP - i) * mm, currency(item.price))
                 self.pdf.drawRightString((LEFT + 134) * mm, (TOP - i) * mm, currency(item.total))
-                self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f%%' % item.tax)
+                self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
                 self.pdf.drawRightString((LEFT + 173) * mm, (TOP - i) * mm, currency(item.total_tax))
                 i+=5
             else:
