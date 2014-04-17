@@ -27,6 +27,11 @@ msgstr "DIČ: %s"
 msgid "IR: %s"
 msgstr "IČ: %s"
 
+#: pdf.py:50
+#, python-format
+msgid "Page %(page_number)d of %(page_count)d"
+msgstr "Strana %(page_number)d z %(page_count)d"
+
 #: pdf.py:69
 #, python-format
 msgid "Variable symbol: %s"
@@ -45,8 +50,8 @@ msgid "Payment information"
 msgstr "Platební informace"
 
 #: pdf.py:138
-msgid "Bank account"
-msgstr "Bankovní účet"
+msgid "Account n."
+msgstr "Č. účtu"
 
 #: pdf.py:139
 msgid "Variable symbol"

@@ -4,12 +4,16 @@ from PIL import Image
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.platypus import Paragraph
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
 
 from conf import _, FONT_PATH, FONT_BOLD_PATH
 from api import Invoice, QrCodeBuilder
+import locale
+import warnings
 
 class BaseInvoice(object):
 
@@ -22,11 +26,63 @@ class BaseInvoice(object):
         pass
 
 
+class NumberedCanvas(Canvas):
+    def __init__(self, *args, **kwargs):
+        Canvas.__init__(self, *args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_number(num_pages)
+            Canvas.showPage(self)
+        Canvas.save(self)
+
+    def draw_page_number(self, page_count):
+        self.setFont("DejaVu", 7)
+        self.drawRightString(200*mm, 20*mm,
+            _("Page %(page_number)d of %(page_count)d") % {"page_number": self._pageNumber, "page_count": page_count})
+
+
+def prepare_invoice_draw(self):
+    self.TOP = 260
+    self.LEFT = 20
+
+    pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
+    pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
+
+    self.pdf = NumberedCanvas(self.filename, pagesize = letter)
+    self.addMetaInformation(self.pdf)
+
+    self.pdf.setFont('DejaVu', 15)
+    self.pdf.setStrokeColorRGB(0, 0, 0)
+
+    if self.invoice.currency:
+        warnings.warn("currency attribute is deprecated, use locale instead", DeprecationWarning)
+    locale.setlocale(locale.LC_ALL, str(self.invoice.currency_locale))
+
+
+#Fix for http://bugs.python.org/issue15276.
+def fix_grouping(bytestring):
+    try:
+        return unicode(bytestring)
+    except UnicodeDecodeError:
+        return bytestring.decode("utf-8")
+
+
+def currency(amount):
+    return fix_grouping(locale.currency(amount, grouping=True)).replace(u",00 Kč", u",- Kč   ")
+
+
 class SimpleInvoice(BaseInvoice):
 
     def gen(self, filename, generate_qr_code=False):
-        self.TOP = 260
-        self.LEFT = 20
         self.filename = filename
         if generate_qr_code:
             qr_builder = QrCodeBuilder(self.invoice)
@@ -35,14 +91,8 @@ class SimpleInvoice(BaseInvoice):
 
         self.qr_builder = qr_builder
 
-        pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
-        pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
+        prepare_invoice_draw(self)
 
-        self.pdf = Canvas(self.filename, pagesize = letter)
-        self.addMetaInformation(self.pdf)
-
-        self.pdf.setFont('DejaVu', 15)
-        self.pdf.setStrokeColorRGB(0, 0, 0)
 
         # Texty
         self.drawMain()
@@ -50,8 +100,9 @@ class SimpleInvoice(BaseInvoice):
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
-        self.drawItems(self.TOP - 80,self.LEFT)
+        self.drawQR(self.TOP - 39.5, self.LEFT + 59, 80.0)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
+        self.drawItems(self.TOP - 80,self.LEFT)
 
         #self.pdf.setFillColorRGB(0, 0, 0)
 
@@ -136,6 +187,12 @@ class SimpleInvoice(BaseInvoice):
             text.textLines(self.invoice.provider.note.split("\n"))
             self.pdf.drawText(text)
 
+        if self.invoice.provider.logo_filename:
+            im = Image.open(self.invoice.provider.logo_filename)
+            height = 30.0
+            width = float(im.size[0]) / (float(im.size[1])/height)
+            self.pdf.drawImage(self.invoice.provider.logo_filename, (LEFT + 84) * mm - width, (TOP - 4) * mm, width, height)
+
     def drawPayment(self,TOP,LEFT):
         self.pdf.setFont('DejaVu-Bold', 9)
         self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Payment information'))
@@ -143,7 +200,7 @@ class SimpleInvoice(BaseInvoice):
         text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
         lines = [
             self.invoice.provider.bank_name,
-            '%s: %s' % (_(u'Bank account'), self.invoice.provider.bank_account),
+            '%s: %s' % (_(u'Account n.'), self.invoice.provider.bank_account),
             '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol)
         ]
         if self.invoice.specific_symbol:
@@ -152,8 +209,8 @@ class SimpleInvoice(BaseInvoice):
         text.textLines(lines)
         self.pdf.drawText(text)
 
-    def drawItems(self,TOP,LEFT):
-        # Items
+
+    def drawItemsHeader(self, TOP, LEFT):
         path = self.pdf.beginPath()
         path.moveTo(LEFT * mm, (TOP - 4) * mm)
         path.lineTo((LEFT + 176) * mm, (TOP - 4) * mm)
@@ -166,7 +223,7 @@ class SimpleInvoice(BaseInvoice):
         items_are_with_tax = self.invoice.use_tax
         if items_are_with_tax:
             i=9
-            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, _(u'Units'))
+            self.pdf.drawString((LEFT + 73) * mm, (TOP - i) * mm, _(u'Units'))
             self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm,
                                 _(u'Price per one'))
             self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm,
@@ -185,33 +242,73 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm,
                                 _(u'Total price'))
             i+=5
+        return i
 
+
+    def drawItems(self,TOP,LEFT):
+        # Items
+        i = self.drawItemsHeader(TOP, LEFT)
         self.pdf.setFont('DejaVu', 7)
 
+        items_are_with_tax = self.invoice.use_tax
+
         # List
+        will_wrap = False
         for item in self.invoice.items:
-            self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, item.description)
-            if item.tax or items_are_with_tax:
-                items_are_with_tax = True
-                if len(item.description) > 52: i+=5
+            if TOP - i < 30 * mm:
+                will_wrap = True
+
+            style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
+            p = Paragraph(item.description, style)
+            pwidth, pheight = p.wrapOn(self.pdf, 70*mm if items_are_with_tax else 90*mm, 30*mm)
+            i_add = max(float(pheight)/mm, 4.23)
+
+            if will_wrap and TOP - i - i_add < 8 * mm:
+                will_wrap = False
+                self.pdf.rect(LEFT * mm, (TOP - i) * mm, (LEFT + 156) * mm, (i + 2) * mm, stroke=True, fill=False) #140,142
+                self.pdf.showPage()
+
+                i = self.drawItemsHeader(self.TOP, LEFT)
+                TOP = self.TOP
+                self.pdf.setFont('DejaVu', 7)
+
+            #leading line
+            path = self.pdf.beginPath()
+            path.moveTo(LEFT * mm, (TOP - i + 3.5) * mm)
+            path.lineTo((LEFT + 176) * mm, (TOP - i + 3.5) * mm)
+            self.pdf.setLineWidth(0.1)
+            self.pdf.drawPath(path, True, True)
+            self.pdf.setLineWidth(1)
+
+            i += i_add
+            p.drawOn(self.pdf, (LEFT + 1) * mm, (TOP - i + 3) * mm)
+            i -= 4.23
+            if items_are_with_tax:
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%i", item.count, grouping=True)), item.unit))
                 else:
-                    self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
-                self.pdf.drawString((LEFT + 88) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
-                self.pdf.drawString((LEFT + 115) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
-                self.pdf.drawString((LEFT + 137) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
-                self.pdf.drawString((LEFT + 146) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total_tax, self.invoice.currency))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%.2f", item.count, grouping=True)), item.unit))
+                self.pdf.drawRightString((LEFT + 110) * mm, (TOP - i) * mm, currency(item.price))
+                self.pdf.drawRightString((LEFT + 134) * mm, (TOP - i) * mm, currency(item.total))
+                self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
+                self.pdf.drawRightString((LEFT + 173) * mm, (TOP - i) * mm, currency(item.total_tax))
                 i+=5
             else:
-                if len(item.description) > 75: i+=5
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
+                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%i", item.count, grouping=True)), item.unit))
                 else:
-                    self.pdf.drawString((LEFT + 104) * mm, (TOP - i) * mm, '%.2f %s' % (item.count, item.unit))
-                self.pdf.drawString((LEFT + 123) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.price, self.invoice.currency))
-                self.pdf.drawString((LEFT + 150) * mm, (TOP - i) * mm, '%.2f,- %s' % (item.total, self.invoice.currency))
+                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (fix_grouping(locale.format("%.2f", item.count, grouping=True)), item.unit))
+                self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, currency(item.price))
+                self.pdf.drawRightString((LEFT + 173) * mm, (TOP - i) * mm, currency(item.total))
                 i+=5
+
+        if will_wrap:
+            self.pdf.rect(LEFT * mm, (TOP - i) * mm, (LEFT + 156) * mm, (i + 2) * mm, stroke=True, fill=False) #140,142
+            self.pdf.showPage()
+
+            i=0
+            TOP = self.TOP
+            self.pdf.setFont('DejaVu', 7)
 
         if self.invoice.rounding_result:
             path = self.pdf.beginPath()
@@ -220,7 +317,7 @@ class SimpleInvoice(BaseInvoice):
             i += 5
             self.pdf.drawPath(path, True, True)
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i) * mm, _(u'Rounding'))
-            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, '%.2f,- %s' % (self.invoice.difference_in_rounding, self.invoice.currency))
+            self.pdf.drawString((LEFT + 68) * mm, (TOP - i) * mm, currency(self.invoice.difference_in_rounding))
             i += 3
 
         path = self.pdf.beginPath()
@@ -230,16 +327,16 @@ class SimpleInvoice(BaseInvoice):
 
         if not items_are_with_tax:
             self.pdf.setFont('DejaVu-Bold', 11)
-            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, _(u'Total')+': %.2f %s' % (self.invoice.price, self.invoice.currency))
+            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 7) * mm, '%s: %s' % (_(u'Total'), currency(self.invoice.price)))
         else:
             self.pdf.setFont('DejaVu-Bold', 6)
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i - 2) * mm, _(u'Breakdown VAT'))
             vat_list, tax_list, total_list, total_tax_list = [_(u'VAT rate')], [_(u'Tax')], [_(u'Without VAT')], [_(u'With VAT')]
             for vat, items in self.invoice.generate_breakdown_vat().iteritems():
-                vat_list.append('%.2f%%' % vat)
-                tax_list.append('%.2f %s' % (items['tax'], self.invoice.currency))
-                total_list.append('%.2f %s' % (items['total'], self.invoice.currency))
-                total_tax_list.append('%.2f %s' % (items['total_tax'], self.invoice.currency))
+                vat_list.append("%s%%" % locale.format('%.2f', vat))
+                tax_list.append(currency(items['tax']))
+                total_list.append(currency(items['total']))
+                total_tax_list.append(currency(items['total_tax']))
 
 
             self.pdf.setFont('DejaVu', 6)
@@ -262,32 +359,38 @@ class SimpleInvoice(BaseInvoice):
 
 
             self.pdf.setFont('DejaVu-Bold', 11)
-            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, _(u'Total with tax')+': %.2f %s' % (self.invoice.price_tax, self.invoice.currency))
+            self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, u'%s: %s' % (_(u'Total with tax'), currency(self.invoice.price_tax)))
 
         if items_are_with_tax:
             self.pdf.rect(LEFT * mm, (TOP - i - 17) * mm, (LEFT + 156) * mm, (i + 19) * mm, stroke=True, fill=False) #140,142
         else:
             self.pdf.rect(LEFT * mm, (TOP - i - 11) * mm, (LEFT + 156) * mm, (i + 13) * mm, stroke=True, fill=False) #140,142
 
+        self.drawCreator(TOP - i - 20, self.LEFT + 98)
+
+
+    def drawCreator(self, TOP, LEFT):
+        height = 20*mm
         if self.invoice.creator.stamp_filename:
             im = Image.open(self.invoice.creator.stamp_filename)
             height = float(im.size[1]) / (float(im.size[0])/200.0)
-            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT + 98) * mm, (TOP - i - 72) * mm, 200, height)
+            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT) * mm, (TOP - 2) * mm - height, 200, height)
 
+        path = self.pdf.beginPath()
+        path.moveTo((LEFT + 8) * mm, (TOP) * mm - height)
+        path.lineTo((LEFT + 62) * mm, (TOP) * mm - height)
+        self.pdf.drawPath(path, True, True)
+
+        self.pdf.drawString((LEFT + 10) * mm, (TOP - 5) * mm - height, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
+
+
+    def drawQR(self, TOP, LEFT, size=130.0):
         if self.qr_builder:
             qr_filename = self.qr_builder.filename
             im = Image.open(qr_filename)
-            height = float(im.size[1]) / (float(im.size[0]) / 200.0)
-            self.pdf.drawImage(qr_filename, LEFT * mm, (TOP - i - 100) * mm,
-                               200, height)
-
-
-        path = self.pdf.beginPath()
-        path.moveTo((LEFT + 110) * mm, (TOP - i - 70) * mm)
-        path.lineTo((LEFT + 164) * mm, (TOP - i - 70) * mm)
-        self.pdf.drawPath(path, True, True)
-
-        self.pdf.drawString((LEFT + 112) * mm, (TOP - i - 75) * mm, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
+            height = float(im.size[1]) / (float(im.size[0]) / size)
+            self.pdf.drawImage(qr_filename, LEFT * mm, TOP * mm - height,
+                               size, height)
 
 
     def drawDates(self,TOP,LEFT):
@@ -313,18 +416,8 @@ class SimpleInvoice(BaseInvoice):
 
 class CorrectingInvoice(SimpleInvoice):
     def gen(self, filename):
-        self.TOP = 260
-        self.LEFT = 20
         self.filename = filename
-
-        pdfmetrics.registerFont(TTFont('DejaVu', FONT_PATH))
-        pdfmetrics.registerFont(TTFont('DejaVu-Bold', FONT_BOLD_PATH))
-
-        self.pdf = Canvas(self.filename, pagesize = letter)
-        self.addMetaInformation(self.pdf)
-
-        self.pdf.setFont('DejaVu', 15)
-        self.pdf.setStrokeColorRGB(0, 0, 0)
+        prepare_invoice_draw(self)
 
         # Texty
         self.drawMain()
@@ -333,8 +426,8 @@ class CorrectingInvoice(SimpleInvoice):
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
         self.drawCorretion(self.TOP - 73,self.LEFT)
-        self.drawItems(self.TOP - 82,self.LEFT)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
+        self.drawItems(self.TOP - 82,self.LEFT)
 
         #self.pdf.setFillColorRGB(0, 0, 0)
 
