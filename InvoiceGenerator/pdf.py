@@ -258,7 +258,12 @@ class SimpleInvoice(BaseInvoice):
             if TOP - i < 30 * mm:
                 will_wrap = True
 
-            if will_wrap and TOP - i < 8 * mm:
+            style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
+            p = Paragraph(item.description, style)
+            pwidth, pheight = p.wrapOn(self.pdf, 70*mm if items_are_with_tax else 90*mm, 30*mm)
+            i_add = max(float(pheight)/mm, 4.23)
+
+            if will_wrap and TOP - i - i_add < 8 * mm:
                 will_wrap = False
                 self.pdf.rect(LEFT * mm, (TOP - i) * mm, (LEFT + 156) * mm, (i + 2) * mm, stroke=True, fill=False) #140,142
                 self.pdf.showPage()
@@ -275,10 +280,7 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawPath(path, True, True)
             self.pdf.setLineWidth(1)
 
-            style = ParagraphStyle('normal', fontName='DejaVu', fontSize=7)
-            p = Paragraph(item.description, style)
-            pwidth, pheight = p.wrapOn(self.pdf, 70*mm if items_are_with_tax else 90*mm, 30*mm)
-            i += max(float(pheight)/mm, 4.23)
+            i += i_add
             p.drawOn(self.pdf, (LEFT + 1) * mm, (TOP - i + 3) * mm)
             i -= 4.23
             if items_are_with_tax:
