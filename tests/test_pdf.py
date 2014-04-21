@@ -8,7 +8,6 @@ from InvoiceGenerator.pdf import SimpleInvoice, CorrectingInvoice
 
 
 class TestBaseInvoice(unittest.TestCase):
-
     def test_required_args(self):
         self.assertRaises(AssertionError, SimpleInvoice, 'Invoice')
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
@@ -42,8 +41,12 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.title = u"Testovací faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
-        invoice.add_item(Item(5, 25.42, description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", tax=20))
-        for i in range(1,26):
+        invoice.add_item(Item(5, 25.42,
+                              description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah "
+                                          u"blah blah blah blah blah blah blah blah blah blah blah blah blah blah "
+                                          u"blah blah blah blah blah blah blah blah blah blah blah",
+                              tax=20))
+        for i in range(1, 26):
             invoice.add_item(Item(5, 25.42, description=u"Popis", tax=0))
         invoice.specific_symbol = 666
         invoice.taxable_date = '1.1.1979'
@@ -51,7 +54,6 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.currency = u'Kč'
         invoice.currency_locale = 'cs_CZ.UTF-8'
         invoice.rounding_result = True
-
 
         tmp_file = NamedTemporaryFile(delete=False)
         pdf = SimpleInvoice(invoice)
@@ -62,7 +64,6 @@ class TestBaseInvoice(unittest.TestCase):
         tmp_file1 = NamedTemporaryFile(delete=False)
         pdf = CorrectingInvoice(invoice)
         pdf.gen(tmp_file1.name)
-
 
     def test_generate_with_vat(self):
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
