@@ -1,6 +1,10 @@
 History
 =======
 
+master
+------
+- The displayed number of pages only when there is more than one
+
 0.4.5 - 2014-04-21
 ------------------
 

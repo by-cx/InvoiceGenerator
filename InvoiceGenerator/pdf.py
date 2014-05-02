@@ -40,7 +40,8 @@ class NumberedCanvas(Canvas):
         num_pages = len(self._saved_page_states)
         for state in self._saved_page_states:
             self.__dict__.update(state)
-            self.draw_page_number(num_pages)
+            if num_pages > 1:
+                self.draw_page_number(num_pages)
             Canvas.showPage(self)
         Canvas.save(self)
 
