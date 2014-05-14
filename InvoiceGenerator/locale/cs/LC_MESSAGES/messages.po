@@ -122,8 +122,8 @@ msgid "Creator"
 msgstr "Vytvořil"
 
 #: pdf.py:281
-msgid "Date"
-msgstr "Datum"
+msgid "Date of exposure"
+msgstr "Den vystavení daňového dokladu"
 
 #: pdf.py:282
 msgid "Payback"

@@ -398,7 +398,7 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.setFont('DejaVu', 10)
         top = TOP + 1
         items = [
-            (LEFT * mm, '%s: %s' % (_(u'Date'), self.invoice.date)),
+            (LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)),
             (LEFT * mm, '%s: %s' % (_(u'Payback'),
                                               self.invoice.payback))
 
