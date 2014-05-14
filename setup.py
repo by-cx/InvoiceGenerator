@@ -17,27 +17,37 @@ if sys.argv[-1] == 'publish':
     command('python setup.py sdist upload')
     sys.exit()
 
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+description = ''
+
+for file_ in ('README', 'CHANGES', 'CONTRIBUTORS'):
+    description += read('%s.rst' % file_) + '\n\n'
+
+
 setup(
-    name = "InvoiceGenerator",
-    version =version,
-    author = "Adam Strauch",
-    author_email = "cx@initd.cz",
-    description = ("Library to generate PDF invoice."),
-    license = "BSD",
-    keywords = "invoice invoices generator",
-    url = "https://github.com/creckx/InvoiceGenerator",
+    name="InvoiceGenerator",
+    version=version,
+    author="Adam Strauch",
+    author_email="cx@initd.cz",
+    description="Library to generate PDF invoice.",
+    license="BSD",
+    keywords="invoice invoices generator",
+    url="https://github.com/creckx/InvoiceGenerator",
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    long_description="This is library to generate simple PDF invoice. It's based on ReportLab.",
+    long_description=description,
     classifiers=[
         "Development Status :: 3 - Alpha",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
         "reportlab", "pillow", "qrplatba>=0.3.3"
-        ],
+    ],
     package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
 )

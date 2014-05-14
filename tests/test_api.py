@@ -6,6 +6,7 @@ import uuid
 from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
     Invoice
 
+
 class AddressTest(unittest.TestCase):
 
     attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
@@ -25,12 +26,12 @@ class AddressTest(unittest.TestCase):
     def test_get_address_lines(self):
         summary = 'Py s.r.o.'
         address = 'Prague street'
-        zip = '1344234234'
+        zip_code = '1344234234'
         city = 'Prague'
 
-        address_object = self.addresss_object(summary, address, city, zip)
+        address_object = self.addresss_object(summary, address, city, zip_code)
 
-        expected = [summary, address, u'%s %s' % (zip, city)]
+        expected = [summary, address, u'%s %s' % (zip_code, city)]
         self.assertEquals(expected, address_object.get_address_lines())
 
     def test_get_contact_lines(self):
@@ -42,11 +43,14 @@ class AddressTest(unittest.TestCase):
         expected = [phone, email]
         self.assertEquals(expected, address.get_contact_lines())
 
+
 class ClientTest(AddressTest):
     addresss_object = Client
 
+
 class ProviderTest(AddressTest):
     addresss_object = Provider
+
 
 class CreatorTest(unittest.TestCase):
 
@@ -58,6 +62,7 @@ class CreatorTest(unittest.TestCase):
 
         self.assertIsInstance(creator.name, unicode)
         self.assertIsInstance(creator.stamp_filename, unicode)
+
 
 class ItemTest(unittest.TestCase):
 
@@ -108,7 +113,7 @@ class ItemTest(unittest.TestCase):
         price = 42
         tax = 99.9
         item = Item(count, price, tax=tax)
-        expected =  price * count * (1.0 + tax / 100.0)
+        expected = price * count * (1.0 + tax / 100.0)
         self.assertEquals(expected, item.total_tax)
 
 
@@ -127,7 +132,6 @@ class InvoiceTest(unittest.TestCase):
         )
         for args in sample_data:
             self.assertRaises(AssertionError, Invoice, **args)
-
 
     def test_check_attrs(self):
         attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
@@ -148,7 +152,6 @@ class InvoiceTest(unittest.TestCase):
 
         self.assertEquals(3, len(invoice.items))
 
-
     def test_price(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
         items = [Item(1, 500), Item(2, 500), Item(3, 500)]
@@ -165,7 +168,6 @@ class InvoiceTest(unittest.TestCase):
             invoice.add_item(item)
 
         self.assertEqual(sum([item.total_tax for item in items]), invoice.price_tax)
-
 
     def test_use_tax(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
@@ -187,7 +189,6 @@ class InvoiceTest(unittest.TestCase):
 
         self.assertEquals(expected, invoice.generate_breakdown_vat())
 
-
     def test_generate_breakdown_vat_table(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
         invoice.add_item(Item(1, 500, tax=50))
@@ -204,4 +205,3 @@ class InvoiceTest(unittest.TestCase):
         invoice.add_item(Item(1, 2.5, tax=50))
 
         self.assertEquals(0.25, invoice.difference_in_rounding)
-
