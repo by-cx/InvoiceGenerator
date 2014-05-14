@@ -1,9 +1,11 @@
 History
 =======
 
-master
-------
+0.4.6 - 2014-05-14
+------------------
 - The displayed number of pages only when there is more than one
+- Rename Date to  Date of exposure
+- Use pillow instead of PIL
 
 0.4.5 - 2014-04-21
 ------------------
