@@ -1,6 +1,12 @@
 History
 =======
 
+0.4.7 - 2014-07-1
+-----------------
+- Change date format for qr code generator
+- Disable converting datetime to string on Invoice
+- Disable rendering empty values
+
 0.4.6 - 2014-05-14
 ------------------
 - The displayed number of pages only when there is more than one
