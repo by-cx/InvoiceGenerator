@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PIL import Image
 import qrcode
+import datetime
 
 from conf import _
 
@@ -142,7 +143,7 @@ class Item(object):
 
 class Invoice(UnicodeProperty):
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'date', 'payback', 'taxable_date')
+              'currency', 'currency_locale')
 
     rounding_result = False
 
@@ -155,6 +156,9 @@ class Invoice(UnicodeProperty):
         self.provider = provider
         self.creator = creator
         self._items = []
+        self.date = None
+        self.payback = None
+        self.taxable_date = None
 
         for attr in self._attrs:
             self.__setattr__(attr, '')
@@ -240,13 +244,16 @@ class QrCodeBuilder(object):
         qr_kwargs = {
             'account': invoice.provider.bank_account,
             'amount': invoice.price_tax,
+            'x_vs': invoice.variable_symbol,
+            'x_ss': invoice.specific_symbol,
         }
-        if invoice.variable_symbol:
-            qr_kwargs['x_vs'] = invoice.variable_symbol
-        if invoice.variable_symbol:
-            qr_kwargs['x_ss'] = invoice.specific_symbol
-        if invoice.payback:
-            qr_kwargs['due_date'] = invoice.payback
+
+        try:
+            qr_kwargs['due_date'] = invoice.payback.strftime("%Y%m%d")
+        except AttributeError:
+            pass
+
+        qr_kwargs = {k: v for k, v in qr_kwargs.items() if v}
         
         return QRPlatbaGenerator(**qr_kwargs)
 
