@@ -397,18 +397,18 @@ class SimpleInvoice(BaseInvoice):
     def drawDates(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 10)
         top = TOP + 1
-        items = [
-            (LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)),
-            (LEFT * mm, '%s: %s' % (_(u'Payback'),
-                                              self.invoice.payback))
-
-        ]
+        items = []
+        if self.invoice.date:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)))
+        if self.invoice.payback:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Payback'), self.invoice.payback)))
         if self.invoice.taxable_date:
             items.append((LEFT * mm, '%s: %s' % (_(u'Taxable date'),
                         self.invoice.taxable_date)))
 
-        items.append((LEFT * mm, '%s: %s' % (_(u'Paytype'),
-                                                       self.invoice.paytype)))
+        if self.invoice.paytype:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Paytype'),
+                                                           self.invoice.paytype)))
 
         for item in items:
             self.pdf.drawString(item[0], top * mm, item[1])

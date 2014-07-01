@@ -2,6 +2,7 @@
 import unittest
 
 from tempfile import NamedTemporaryFile
+import datetime
 
 from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator
 from InvoiceGenerator.pdf import SimpleInvoice, CorrectingInvoice
@@ -49,8 +50,9 @@ class TestBaseInvoice(unittest.TestCase):
         for i in range(1, 26):
             invoice.add_item(Item(5, 25.42, description=u"Popis", tax=0))
         invoice.specific_symbol = 666
-        invoice.taxable_date = '1.1.1979'
+        invoice.taxable_date = datetime.date.today()
         invoice.variable_symbol = '000000001'
+        invoice.payback = datetime.date.today()
         invoice.currency = u'Kč'
         invoice.currency_locale = 'cs_CZ.UTF-8'
         invoice.rounding_result = True
