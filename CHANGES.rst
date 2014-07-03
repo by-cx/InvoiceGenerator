@@ -1,6 +1,10 @@
 History
 =======
 
+0.4.8 - 2014-07-3
+-----------------
+- Create proforma invoice
+
 0.4.7 - 2014-07-1
 -----------------
 - Change date format for qr code generator
