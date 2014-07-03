@@ -1,6 +1,10 @@
 History
 =======
 
+0.4.9 - 2014-07-3
+-----------------
+- Bug fix previous commit
+
 0.4.8 - 2014-07-3
 -----------------
 - Create proforma invoice

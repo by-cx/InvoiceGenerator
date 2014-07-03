@@ -399,7 +399,7 @@ class SimpleInvoice(BaseInvoice):
         top = TOP + 1
         items = []
         if self.invoice.date:
-            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)))
+            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure taxable invoice'), self.invoice.date)))
         if self.invoice.payback:
             items.append((LEFT * mm, '%s: %s' % (_(u'Payback'), self.invoice.payback)))
         if self.invoice.taxable_date:
@@ -448,3 +448,26 @@ class CorrectingInvoice(SimpleInvoice):
         self.pdf.setFont('DejaVu', 8)
         self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Correction document for invoice: %s') % self.invoice.variable_symbol)
         self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, _(u'Reason to correction: %s') % self.invoice.reason)
+
+
+class ProformaInvoice(SimpleInvoice):
+
+    def drawCreator(self, TOP, LEFT):
+        return
+
+    def drawDates(self, TOP, LEFT):
+        self.pdf.setFont('DejaVu', 10)
+        top = TOP + 1
+        items = []
+        if self.invoice.date:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)))
+        if self.invoice.payback:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Payback'), self.invoice.payback)))
+
+        if self.invoice.paytype:
+            items.append((LEFT * mm, '%s: %s' % (_(u'Paytype'),
+                                                 self.invoice.paytype)))
+
+        for item in items:
+            self.pdf.drawString(item[0], top * mm, item[1])
+            top += -5
