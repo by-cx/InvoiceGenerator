@@ -1,6 +1,12 @@
 History
 =======
 
+0.5.0 - 2014-09-21
+------------------
+- Add property number to object Invoice
+- Replaced variable symbol for invoice number in invoice header
+- Update Czech translations
+
 0.4.9 - 2014-07-3
 -----------------
 - Bug fix previous commit

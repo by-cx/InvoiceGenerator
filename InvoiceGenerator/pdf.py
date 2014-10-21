@@ -126,8 +126,8 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.drawString(self.LEFT*mm, self.TOP*mm, self.invoice.title)
         self.pdf.drawString((self.LEFT + 90) * mm,
             self.TOP*mm,
-            _(u'Variable symbol: %s') %
-            self.invoice.variable_symbol)
+            _(u'Invoice num.: %s') %
+            self.invoice.number)
 
     def drawMain(self):
         # Borders
@@ -446,7 +446,7 @@ class CorrectingInvoice(SimpleInvoice):
 
     def drawCorretion(self,TOP,LEFT):
         self.pdf.setFont('DejaVu', 8)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Correction document for invoice: %s') % self.invoice.variable_symbol)
+        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Correction document for invoice: %s') % self.invoice.number)
         self.pdf.drawString(LEFT * mm, (TOP - 4) * mm, _(u'Reason to correction: %s') % self.invoice.reason)
 
 

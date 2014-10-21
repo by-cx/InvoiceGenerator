@@ -143,7 +143,7 @@ class Item(object):
 
 class Invoice(UnicodeProperty):
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale')
+              'currency', 'currency_locale', 'number')
 
     rounding_result = False
 

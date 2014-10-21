@@ -52,6 +52,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.specific_symbol = 666
         invoice.taxable_date = datetime.date.today()
         invoice.variable_symbol = '000000001'
+        invoice.number = 'F20140001'
         invoice.payback = datetime.date.today()
         invoice.currency = u'Kč'
         invoice.currency_locale = 'cs_CZ.UTF-8'
@@ -91,6 +92,7 @@ class TestBaseInvoice(unittest.TestCase):
         client.note = u'zapsaná v obchodním rejstříku vedeném městským soudem v Praze,\noddíl C, vložka 176551'
 
         invoice = Invoice(client, provider, Creator('blah'))
+        invoice.number = 'F20140007'
         invoice.title = u"Proforma faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
@@ -104,6 +106,7 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.specific_symbol = 666
         invoice.date = datetime.date.today()
         invoice.variable_symbol = '000000001'
+        invoice.number = 'F20140001'
         invoice.payback = datetime.date.today()
         invoice.currency = u'Kč'
         invoice.currency_locale = 'cs_CZ.UTF-8'
@@ -115,6 +118,7 @@ class TestBaseInvoice(unittest.TestCase):
 
     def test_generate_with_vat(self):
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
+        invoice.number = 'F20140001'
         invoice.add_item(Item(32, 600))
         invoice.add_item(Item(60, 50, tax=10))
         invoice.add_item(Item(50, 60, tax=5))

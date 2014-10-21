@@ -12,10 +12,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.4.8\n"
+"Project-Id-Version: 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-07 22:04+0100\n"
-"PO-Revision-Date: 2012-04-22 14:33+0100\n"
+"POT-Creation-Date: 2014-09-22 15:04+0100\n"
+"PO-Revision-Date: 2014-09-22 15:14+0100\n"
 "Last-Translator: rbas <rbas@rbas.cz>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: CS\n"
@@ -24,107 +24,107 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
 
-#: api.py:41
+#: api.py:47
 #, python-format
 msgid "Vat in: %s"
 msgstr "DIČ: %s"
 
-#: api.py:44
+#: api.py:50
 #, python-format
 msgid "IR: %s"
 msgstr "IČ: %s"
 
-#: pdf.py:50
+#: pdf.py:51
 #, python-format
 msgid "Page %(page_number)d of %(page_count)d"
 msgstr "Strana %(page_number)d z %(page_count)d"
 
-#: pdf.py:69
+#: pdf.py:129
 #, python-format
-msgid "Variable symbol: %s"
-msgstr "Variabilní symbol: %s"
+msgid "Invoice num.: %s"
+msgstr "Faktura č.: %s"
 
-#: pdf.py:94
+#: pdf.py:154
 msgid "Customer"
 msgstr "Odběratel"
 
-#: pdf.py:114
+#: pdf.py:174
 msgid "Provider"
 msgstr "Poskytovatel"
 
-#: pdf.py:133
+#: pdf.py:199
 msgid "Payment information"
 msgstr "Platební informace"
 
-#: pdf.py:138
+#: pdf.py:204
 msgid "Account n."
 msgstr "Č. účtu"
 
-#: pdf.py:139
+#: pdf.py:205
 msgid "Variable symbol"
-msgstr "Variabilní symbol"
+msgstr "VS"
 
-#: pdf.py:143
+#: pdf.py:209
 msgid "Specific symbol"
-msgstr "Specifický symbol"
+msgstr "SS"
 
-#: pdf.py:155
+#: pdf.py:221
 msgid "List of items"
 msgstr "Seznam položek"
 
-#: pdf.py:157
+#: pdf.py:223
 msgid "Description"
 msgstr "Popis"
 
-#: pdf.py:161 pdf.py:174
+#: pdf.py:227 pdf.py:240
 msgid "Units"
 msgstr "Jednotek"
 
-#: pdf.py:163 pdf.py:176
+#: pdf.py:229 pdf.py:242
 msgid "Price per one"
 msgstr "Cena za jednotku"
 
-#: pdf.py:165 pdf.py:178
+#: pdf.py:231 pdf.py:244
 msgid "Total price"
 msgstr "Celková cena"
 
-#: pdf.py:167 pdf.py:229
+#: pdf.py:233 pdf.py:335
 msgid "Tax"
 msgstr "DPH"
 
-#: pdf.py:169
+#: pdf.py:235
 msgid "Total price with tax"
 msgstr "Celková cena s daní"
 
-#: pdf.py:214
+#: pdf.py:320
 msgid "Rounding"
 msgstr "Haléřové vyrovnání"
 
-#: pdf.py:225
+#: pdf.py:331
 msgid "Total"
 msgstr "Celkem"
 
-#: pdf.py:228
+#: pdf.py:334
 msgid "Breakdown VAT"
 msgstr "Rozpis DPH"
 
-#: pdf.py:229
+#: pdf.py:335
 msgid "VAT rate"
 msgstr "Sazba"
 
-#: pdf.py:229
+#: pdf.py:335
+msgid "Without VAT"
+msgstr ""
+
+#: pdf.py:335
 msgid "With VAT"
 msgstr "S DPH"
 
-#: pdf.py:229
-msgid "Without VAT"
-msgstr "Bez DPH"
-
-#: pdf.py:257
+#: pdf.py:363
 msgid "Total with tax"
 msgstr "Celkem s DPH"
 
-#: pdf.py:274
+#: pdf.py:385
 msgid "Creator"
 msgstr "Vytvořil"
 
@@ -132,33 +132,33 @@ msgstr "Vytvořil"
 msgid "Date of exposure taxable invoice"
 msgstr "Den vystavení daňového dokladu"
 
-#: pdf.py:282
+#: pdf.py:404 pdf.py:465
 msgid "Payback"
 msgstr "Splatnost"
 
-#: pdf.py:287
+#: pdf.py:406
 msgid "Taxable date"
 msgstr "Datum zdanitelného plnění"
 
-#: pdf.py:290
+#: pdf.py:410 pdf.py:468
 msgid "Paytype"
 msgstr "Typ platby"
 
-#: pdf.py:333
+#: pdf.py:443
 #, python-format
 msgid "Correcting document: %s"
 msgstr "Opravný daňový doklad: %s"
 
-#: pdf.py:339
+#: pdf.py:449
 #, python-format
 msgid "Correction document for invoice: %s"
 msgstr "Opravný daňový doklad k daňovému dokladu: %s"
 
-#: pdf.py:340
+#: pdf.py:450
 #, python-format
 msgid "Reason to correction: %s"
 msgstr "Důvod opravy: %s"
 
-#: pdf.py:281
+#: pdf.py:463
 msgid "Date of exposure"
 msgstr "Den vystavení dokladu"
