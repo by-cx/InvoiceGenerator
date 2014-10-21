@@ -10,7 +10,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
 
-from conf import _, FONT_PATH, FONT_BOLD_PATH
+from InvoiceGenerator.conf import _, FONT_PATH, FONT_BOLD_PATH
 from api import Invoice, QrCodeBuilder
 import locale
 import warnings

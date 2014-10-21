@@ -1,6 +1,11 @@
 History
 =======
 
+Master
+------
+- Fix conf relative import
+
+
 0.5.0 - 2014-09-21
 ------------------
 - Add property number to object Invoice

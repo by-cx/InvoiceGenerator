@@ -3,7 +3,7 @@ from PIL import Image
 import qrcode
 import datetime
 
-from conf import _
+from InvoiceGenerator.conf import _
 
 __all__ = ['Client', 'Provider', 'Creator', 'Item', 'Invoice']
 
