@@ -165,7 +165,7 @@ class SimpleInvoice(BaseInvoice):
         if self.invoice.client.note:
             self.pdf.setFont('DejaVu', 6)
             text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 28) * mm)
-            text.textLines(self.invoice.client.note.split("\n"))
+            text.textLines(self.invoice.client.note.splitlines())
             self.pdf.drawText(text)
 
 
@@ -185,7 +185,7 @@ class SimpleInvoice(BaseInvoice):
         if self.invoice.provider.note:
             self.pdf.setFont('DejaVu', 6)
             text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
-            text.textLines(self.invoice.provider.note.split("\n"))
+            text.textLines(self.invoice.provider.note.splitlines())
             self.pdf.drawText(text)
 
         if self.invoice.provider.logo_filename:
