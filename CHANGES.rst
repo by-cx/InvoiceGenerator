@@ -1,9 +1,10 @@
 History
 =======
 
-Master
-------
+0.5.1 - 2014-10-28
+------------------
 - Fix conf relative import
+- Use python native function splitlines for notes
 
 
 0.5.0 - 2014-09-21
