@@ -4,8 +4,8 @@ InvoiceGenerator
 
 This is library to generate a simple PDF invoice. It's based on ReportLab.
 
-Instalation
-===========
+Installation
+============
 
 Run this command as root::
 
@@ -46,3 +46,13 @@ Usage::
 	pdf = SimpleInvoice(invoice)
 	pdf.gen(tmp_file.name, generate_qr_code=True)
 
+Hacking
+=======
+
+Fork the [repository on github](https://github.com/creckx/InvoiceGenerator) and
+write code. Make sure to add tests covering your code under `/tests/`. You can
+run tests using::
+
+    python setup.py test
+
+Then propose your patch via a pull request.

@@ -50,4 +50,5 @@ setup(
         "reportlab", "pillow", "qrplatba>=0.3.3"
     ],
     package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
+    test_suite='tests',
 )
