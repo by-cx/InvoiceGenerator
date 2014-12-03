@@ -202,8 +202,10 @@ class SimpleInvoice(BaseInvoice):
         lines = [
             self.invoice.provider.bank_name,
             '%s: %s' % (_(u'Account n.'), self.invoice.provider.bank_account),
-            '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol)
         ]
+        if self.invoice.variable_symbol:
+            lines.append(
+                '%s: %s' % (_(u'Variable symbol'), self.invoice.variable_symbol))
         if self.invoice.specific_symbol:
             lines.append(
                 '%s: %s' % (_(u'Specific symbol'), self.invoice.specific_symbol))

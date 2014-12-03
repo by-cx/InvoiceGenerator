@@ -244,9 +244,11 @@ class QrCodeBuilder(object):
         qr_kwargs = {
             'account': invoice.provider.bank_account,
             'amount': invoice.price_tax,
-            'x_vs': invoice.variable_symbol,
             'x_ss': invoice.specific_symbol,
         }
+
+        if invoice.variable_symbol:
+            qr_kwargs['x_vs'] = invoice.variable_symbol
 
         try:
             qr_kwargs['due_date'] = invoice.payback.strftime("%Y%m%d")
