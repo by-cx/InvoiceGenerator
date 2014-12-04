@@ -49,7 +49,7 @@ Usage::
 Hacking
 =======
 
-Fork the [repository on github](https://github.com/creckx/InvoiceGenerator) and
+Fork the `repository on github <https://github.com/creckx/InvoiceGenerator>`_ and
 write code. Make sure to add tests covering your code under `/tests/`. You can
 run tests using::
 
