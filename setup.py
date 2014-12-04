@@ -41,7 +41,6 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
@@ -50,4 +49,5 @@ setup(
         "reportlab", "pillow", "qrplatba>=0.3.3"
     ],
     package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
+    test_suite='tests',
 )
