@@ -1,11 +1,15 @@
 History
 =======
 
+0.5.2 - 2014-12-04
+------------------
+- Stop mentionning python2.6 support
+- Make invoice.variable_symbol optional
+
 0.5.1 - 2014-10-28
 ------------------
 - Fix conf relative import
 - Use python native function splitlines for notes
-
 
 0.5.0 - 2014-09-21
 ------------------
