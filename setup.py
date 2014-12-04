@@ -50,4 +50,10 @@ setup(
     ],
     package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
     test_suite='tests',
+    command_options={
+        'build_sphinx': {
+            'version': ('setup.py', version),
+            'release': ('setup.py', version),
+        }
+    }
 )
