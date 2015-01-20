@@ -49,10 +49,17 @@ Usage::
 Hacking
 =======
 
-Fork the [repository on github](https://github.com/creckx/InvoiceGenerator) and
+Fork the `repository on github <https://github.com/creckx/InvoiceGenerator>`_ and
 write code. Make sure to add tests covering your code under `/tests/`. You can
 run tests using::
 
     python setup.py test
 
 Then propose your patch via a pull request.
+
+Documentation is generated from `doc/source/` using `Sphinx
+<http://sphinx-doc.org/>`_::
+
+    python setup.py build_sphinx
+
+Then head to `doc/build/html/index.html`.
