@@ -1,6 +1,8 @@
 ================
 InvoiceGenerator
 ================
+.. image:: https://travis-ci.org/creckx/InvoiceGenerator.svg
+    :target: https://travis-ci.org/creckx/InvoiceGenerator
 
 This is library to generate a simple PDF invoice. It's based on ReportLab.
 
