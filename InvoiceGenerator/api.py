@@ -12,7 +12,7 @@ class UnicodeProperty(object):
 
     def __setattr__(self, key, value):
         if key in self._attrs:
-            value = unicode(value)
+            value = value
         self.__dict__[key] = value
 
 class Address(UnicodeProperty):
@@ -76,9 +76,9 @@ class Item(object):
     def __init__(self, count, price, description='', unit='', tax=0.0):
         self._count = float(count)
         self._price = float(price)
-        self._description = unicode(description)
-        self._unit = unicode(unit)
-        self._tax = float(tax)
+        self._description = description
+        self._unit = unit
+        self._tax = tax
 
     @property
     def total(self):
@@ -86,7 +86,10 @@ class Item(object):
 
     @property
     def total_tax(self):
-        return self.price * self.count * (1.0 + self.tax / 100.0)
+        if self.tax is not None:
+            return self.price * self.count * (1.0 + self.tax / 100.0)
+        else:
+            return self.price * self.count
 
     def count_tax(self):
         return self.total_tax - self.total
@@ -97,7 +100,7 @@ class Item(object):
 
     @description.setter
     def description(self, value):
-        self._description = unicode(value)
+        self._description = value
 
     @property
     def count(self):
@@ -127,7 +130,7 @@ class Item(object):
 
     @unit.setter
     def unit(self, value):
-        self._unit = unicode(value)
+        self._unit = value
 
     @property
     def tax(self):
@@ -142,6 +145,8 @@ class Item(object):
 
 
 class Invoice(UnicodeProperty):
+    # Please dont use this style of attributs, it much more
+    # complicated to develop something - IDE can't help with this
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
               'currency', 'currency_locale', 'number')
 
@@ -183,9 +188,9 @@ class Invoice(UnicodeProperty):
     def use_tax(self):
         use_tax = False
         for item in self.items:
-            if item.tax:
+            if item.tax is not None:
                 use_tax = True
-                continue
+                break
         return use_tax
 
     @property
@@ -196,7 +201,7 @@ class Invoice(UnicodeProperty):
     def _get_grouped_items_by_tax(self):
         table = {}
         for item in self.items:
-            if not table.has_key(item.tax):
+            if item.tax not in table:
                 table[item.tax] = {'total': item.total, 'total_tax': item.total_tax, 'tax': item.count_tax()}
             else:
                 table[item.tax]['total'] += item.total

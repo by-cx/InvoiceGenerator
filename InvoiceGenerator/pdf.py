@@ -11,14 +11,14 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
 
 from InvoiceGenerator.conf import _, FONT_PATH, FONT_BOLD_PATH
-from api import Invoice, QrCodeBuilder
+from InvoiceGenerator.api import Invoice, QrCodeBuilder
 import locale
 import warnings
 
 class BaseInvoice(object):
 
     def __init__(self, invoice):
-        assert isinstance(invoice, Invoice)
+        assert isinstance(invoice, Invoice), "invoice is not instance of Invoice"
 
         self.invoice = invoice
 
@@ -72,7 +72,7 @@ def prepare_invoice_draw(self):
 #Fix for http://bugs.python.org/issue15276.
 def fix_grouping(bytestring):
     try:
-        return unicode(bytestring)
+        return bytestring
     except UnicodeDecodeError:
         return bytestring.decode("utf-8")
 
@@ -101,7 +101,7 @@ class SimpleInvoice(BaseInvoice):
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
-        self.drawQR(self.TOP - 39.5, self.LEFT + 59, 80.0)
+        self.drawQR(self.TOP - 39.4, self.LEFT + 59, 80.0)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
         self.drawItems(self.TOP - 80,self.LEFT)
 
@@ -335,7 +335,7 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.setFont('DejaVu-Bold', 6)
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i - 2) * mm, _(u'Breakdown VAT'))
             vat_list, tax_list, total_list, total_tax_list = [_(u'VAT rate')], [_(u'Tax')], [_(u'Without VAT')], [_(u'With VAT')]
-            for vat, items in self.invoice.generate_breakdown_vat().iteritems():
+            for vat, items in self.invoice.generate_breakdown_vat().items():
                 vat_list.append("%s%%" % locale.format('%.2f', vat))
                 tax_list.append(currency(items['tax']))
                 total_list.append(currency(items['total']))

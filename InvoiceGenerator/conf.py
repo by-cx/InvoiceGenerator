@@ -11,7 +11,7 @@ try:
     t = gettext.translation('messages', path, languages=[LANGUAGE],
                             codeset='utf8')
 
-    _ = lambda message: t.gettext(message).decode('utf8')
+    _ = lambda message: t.gettext(message)
 except IOError:
     _ = lambda x: x
     print("Fix this!")
@@ -20,3 +20,10 @@ except ImportError:
 
 FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
 FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
+
+if not os.path.isfile(FONT_PATH):
+    FONT_PATH = "/usr/share/fonts/TTF/DejaVuSans.ttf"
+    FONT_BOLD_PATH = "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf"
+
+if not os.path.isfile(FONT_PATH):
+    raise Exception("Fonts not found")
