@@ -14,7 +14,7 @@ try:
     _ = lambda message: t.gettext(message).decode('utf8')
 except IOError:
     _ = lambda x: x
-    print "Fix this!"
+    print("Fix this!")
 except ImportError:
     _ = lambda x: x
 
