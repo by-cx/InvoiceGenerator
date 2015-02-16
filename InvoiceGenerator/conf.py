@@ -18,8 +18,8 @@ except IOError:
 except ImportError:
     _ = lambda x: x
 
-FONT_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf'
-FONT_BOLD_PATH = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf'
+FONT_PATH = os.path.join(PROJECT_ROOT, "fonts", "DejaVuSans.ttf")
+FONT_BOLD_PATH = os.path.join(PROJECT_ROOT, "fonts", "DejaVuSans-Bold.ttf")
 
 if not os.path.isfile(FONT_PATH):
     FONT_PATH = "/usr/share/fonts/TTF/DejaVuSans.ttf"
