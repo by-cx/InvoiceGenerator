@@ -22,7 +22,7 @@ class Address(UnicodeProperty):
 
     def __init__(self, summary, address='', city='', zip='', phone='', email='',
                bank_name='', bank_account='', note='', vat_id='', ir='',
-               logo_filename=''):
+               logo_filename='', vat_note=''):
         self.summary = summary
         self.address = address
         self.city = city
@@ -33,6 +33,7 @@ class Address(UnicodeProperty):
         self.bank_account = bank_account
         self.note = note
         self.vat_id = vat_id
+        self.vat_note = vat_note
         self.ir = ir
         self.logo_filename = logo_filename
 

@@ -366,7 +366,11 @@ class SimpleInvoice(BaseInvoice):
             text.textLines(total_tax_list)
             self.pdf.drawText(text)
 
-
+            # VAT note
+            if self.invoice.client.vat_note:
+                text = self.pdf.beginText((LEFT + 1) * mm, (TOP - i - 11) * mm)
+                text.textLines([self.invoice.client.vat_note])
+                self.pdf.drawText(text)
 
             self.pdf.setFont('DejaVu-Bold', 11)
             self.pdf.drawString((LEFT + 100) * mm, (TOP - i - 14) * mm, u'%s: %s' % (_(u'Total with tax'), currency(self.invoice.price_tax, self.invoice.currency)))
