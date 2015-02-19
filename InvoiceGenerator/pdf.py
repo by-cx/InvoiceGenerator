@@ -102,7 +102,7 @@ class SimpleInvoice(BaseInvoice):
         self.drawProvider(self.TOP - 10,self.LEFT + 3)
         self.drawClient(self.TOP - 35,self.LEFT + 91)
         self.drawPayment(self.TOP - 47,self.LEFT + 3)
-        self.drawQR(self.TOP - 39.4, self.LEFT + 59, 80.0)
+        self.drawQR(self.TOP - 39.4, self.LEFT + 61, 75.0)
         self.drawDates(self.TOP - 10,self.LEFT + 91)
         self.drawItems(self.TOP - 80,self.LEFT)
 
@@ -205,7 +205,7 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.setFont('DejaVu-Bold', 8)
         self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _(u'Payment information'))
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 2) * mm)
+        text = self.pdf.beginText((LEFT) * mm, (TOP - 2) * mm)
         lines = [
             self.invoice.provider.bank_name,
             '%s: %s' % (_(u'Account n.'), self.invoice.provider.bank_account),
