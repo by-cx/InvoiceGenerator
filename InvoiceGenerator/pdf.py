@@ -202,10 +202,10 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawImage(self.invoice.provider.logo_filename, (LEFT + 84) * mm - width, (TOP - 4) * mm, width, height)
 
     def drawPayment(self,TOP,LEFT):
-        self.pdf.setFont('DejaVu-Bold', 9)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Payment information'))
+        self.pdf.setFont('DejaVu-Bold', 8)
+        self.pdf.drawString(LEFT * mm, (TOP + 2) * mm, _(u'Payment information'))
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
+        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 2) * mm)
         lines = [
             self.invoice.provider.bank_name,
             '%s: %s' % (_(u'Account n.'), self.invoice.provider.bank_account),
@@ -216,6 +216,12 @@ class SimpleInvoice(BaseInvoice):
         if self.invoice.specific_symbol:
             lines.append(
                 '%s: %s' % (_(u'Specific symbol'), self.invoice.specific_symbol))
+        if self.invoice.iban:
+            lines.append(
+                '%s: %s' % (_(u'IBAN'), self.invoice.iban))
+        if self.invoice.swift:
+            lines.append(
+                '%s: %s' % (_(u'SWIFT'), self.invoice.swift))
         text.textLines(lines)
         self.pdf.drawText(text)
 

@@ -149,7 +149,7 @@ class Invoice(UnicodeProperty):
     # Please dont use this style of attributs, it much more
     # complicated to develop something - IDE can't help with this
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'number')
+              'currency', 'currency_locale', 'number', 'iban', 'swift', )
 
     rounding_result = False
 
