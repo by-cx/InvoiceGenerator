@@ -476,6 +476,14 @@ class ProformaInvoice(SimpleInvoice):
     def drawCreator(self, TOP, LEFT):
         return
 
+    def drawTitle(self):
+        # Up line
+        self.pdf.drawString(self.LEFT*mm, self.TOP*mm, self.invoice.title)
+        self.pdf.drawString((self.LEFT + 90) * mm,
+                self.TOP*mm,
+                _(u'num.: %s') %
+                self.invoice.number)
+
     def drawDates(self, TOP, LEFT):
         self.pdf.setFont('DejaVu', 10)
         top = TOP + 1
