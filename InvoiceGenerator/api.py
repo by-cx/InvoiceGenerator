@@ -150,6 +150,7 @@ class Invoice(UnicodeProperty):
     # complicated to develop something - IDE can't help with this
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
               'currency', 'currency_locale', 'number', 'iban', 'swift', )
+    use_tax = False
 
     rounding_result = False
 
@@ -184,15 +185,6 @@ class Invoice(UnicodeProperty):
     @property
     def items(self):
         return self._items
-
-    @property
-    def use_tax(self):
-        use_tax = False
-        for item in self.items:
-            if item.tax is not None:
-                use_tax = True
-                break
-        return use_tax
 
     @property
     def difference_in_rounding(self):
