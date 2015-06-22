@@ -481,7 +481,7 @@ class ProformaInvoice(SimpleInvoice):
         self.pdf.drawString(self.LEFT*mm, self.TOP*mm, self.invoice.title)
         self.pdf.drawString((self.LEFT + 90) * mm,
                 self.TOP*mm,
-                _(u'num.: %s') %
+                _(u'Document num.: %s') %
                 self.invoice.number)
 
     def drawDates(self, TOP, LEFT):
