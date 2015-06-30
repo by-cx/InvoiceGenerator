@@ -2,7 +2,6 @@
 import os
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__)))
-print(PROJECT_ROOT)
 
 LANGUAGE = 'cs'
 
