@@ -136,7 +136,7 @@ msgid "Taxable invoice num.: %s"
 msgstr "Daňový doklad č.: %s"
 
 #: pdf.py:404 pdf.py:465
-msgid "Payback"
+msgid "Due date"
 msgstr "Splatnost"
 
 #: pdf.py:406
