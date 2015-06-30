@@ -10,10 +10,23 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.platypus.tables import Table, TableStyle
 
-from InvoiceGenerator.conf import _, FONT_PATH, FONT_BOLD_PATH
+from InvoiceGenerator.conf import get_gettext, LANGUAGE
+from InvoiceGenerator.conf import FONT_PATH, FONT_BOLD_PATH
 from InvoiceGenerator.api import Invoice, QrCodeBuilder
 import locale
 import warnings
+import os
+
+
+def _(*args, **kwargs):
+    lang = os.environ.get("INVOICE_LANG", LANGUAGE)
+    try:
+        gettext = get_gettext(lang)
+    except ImportError:
+        gettext = lambda x: x
+    except FileNotFoundError:
+        gettext = lambda x: x
+    return gettext(*args, **kwargs)
 
 class BaseInvoice(object):
 

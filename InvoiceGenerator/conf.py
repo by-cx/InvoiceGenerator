@@ -2,16 +2,22 @@
 import os
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__)))
+print(PROJECT_ROOT)
 
 LANGUAGE = 'cs'
 
-try:
+def get_gettext(lang):
     import gettext
     path =  os.path.join(PROJECT_ROOT, 'locale')
-    t = gettext.translation('messages', path, languages=[LANGUAGE],
+    t = gettext.translation('messages', path, languages=[lang],
                             codeset='utf8')
+    t.install()
 
-    _ = lambda message: t.gettext(message)
+    return lambda message: t.gettext(message)
+
+try:
+    lang = os.environ.get("INVOICE_LANG", LANGUAGE)
+    _ = get_gettext(lang)
 except IOError:
     _ = lambda x: x
     print("Fix this!")
