@@ -32,6 +32,8 @@ Usage::
 	from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator
 	from InvoiceGenerator.pdf import SimpleInvoice
 
+    # choose en as language
+    os.environ["INVOICE_LANG"] = "en"
 
 	client = Client('Client company')
 	provider = Provider('My company', bank_account='2600420569/2010')
