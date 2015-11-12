@@ -10,8 +10,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from tempfile import NamedTemporaryFile
 
-from api import Invoice as ApiInvoice
-from pdf import BaseInvoice
+from .api import Invoice as ApiInvoice
+from .pdf import BaseInvoice
 
 class Address:
     firstname = ""

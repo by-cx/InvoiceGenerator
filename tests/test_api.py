@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 import uuid
+from six import string_types
 
 
 from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
@@ -18,10 +19,11 @@ class AddressTest(unittest.TestCase):
         self.assertRaises(TypeError, self.addresss_object)
 
     def test_check_data_types(self):
-        address = self.addresss_object({key: uuid.uuid4()
+        address = self.addresss_object(**{key: str(uuid.uuid4())
                                         for key in self.attrs})
         for key in self.attrs:
-            self.assertIsInstance(address.__getattribute__(key), unicode)
+            value = address.__getattribute__(key)
+            self.assertIsInstance(value, string_types, msg="Attribute %s with type %s is not string type." % (key, type(value)))
 
     def test_get_address_lines(self):
         summary = 'Py s.r.o.'
@@ -60,8 +62,8 @@ class CreatorTest(unittest.TestCase):
     def test_check_data_types(self):
         creator = Creator('John Doe', '/black/hole')
 
-        self.assertIsInstance(creator.name, unicode)
-        self.assertIsInstance(creator.stamp_filename, unicode)
+        self.assertIsInstance(creator.name, string_types)
+        self.assertIsInstance(creator.stamp_filename, string_types)
 
 
 class ItemTest(unittest.TestCase):
@@ -75,8 +77,8 @@ class ItemTest(unittest.TestCase):
 
         self.assertIsInstance(item.count, float)
         self.assertIsInstance(item.price, float)
-        self.assertIsInstance(item.description, unicode)
-        self.assertIsInstance(item.unit, unicode)
+        self.assertIsInstance(item.description, string_types)
+        self.assertIsInstance(item.unit, string_types)
         self.assertIsInstance(item.tax, float)
 
     def test_getters_and_setters(self):
@@ -90,8 +92,8 @@ class ItemTest(unittest.TestCase):
 
         self.assertIsInstance(item.count, float)
         self.assertIsInstance(item.price, float)
-        self.assertIsInstance(item.description, unicode)
-        self.assertIsInstance(item.unit, unicode)
+        self.assertIsInstance(item.description, string_types)
+        self.assertIsInstance(item.unit, string_types)
         self.assertIsInstance(item.tax, float)
 
     def test_count_total(self):
@@ -114,6 +116,15 @@ class ItemTest(unittest.TestCase):
         tax = 99.9
         item = Item(count, price, tax=tax)
         expected = price * count * (1.0 + tax / 100.0)
+        self.assertEquals(expected, item.total_tax)
+
+    def test_count_total_with_none_tax(self):
+        count = 24
+        price = 42
+        tax = None
+        item = Item(count, price, tax=tax)
+        expected = price * count
+        self.assertIsInstance(item.tax, float)
         self.assertEquals(expected, item.total_tax)
 
 
@@ -169,12 +180,13 @@ class InvoiceTest(unittest.TestCase):
 
         self.assertEqual(sum([item.total_tax for item in items]), invoice.price_tax)
 
-    def test_use_tax(self):
-        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
-        invoice.add_item(Item(1, 500, tax=99.9))
-        invoice.add_item(Item(500, 5))
+    # This test is disabled since use_tax is only configurable by user
+    # def test_use_tax(self):
+    #     invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+    #     invoice.add_item(Item(1, 500, tax=99.9))
+    #     invoice.add_item(Item(500, 5))
 
-        self.assertTrue(invoice.use_tax)
+    #     self.assertTrue(invoice.use_tax)
 
     def test_generate_breakdown_vat(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
