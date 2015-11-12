@@ -79,7 +79,7 @@ class Item(object):
         self._price = float(price)
         self._description = description
         self._unit = unit
-        self._tax = tax
+        self.tax = tax
 
     @property
     def total(self):
@@ -213,7 +213,7 @@ class Invoice(UnicodeProperty):
 
     def generate_breakdown_vat_table(self):
         rows = []
-        for vat,items in self.generate_breakdown_vat().iteritems():
+        for vat,items in self.generate_breakdown_vat().items():
              rows.append((vat, items['total'], items['total_tax'], items['tax']))
 
         return rows

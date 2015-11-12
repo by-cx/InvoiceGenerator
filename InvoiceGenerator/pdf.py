@@ -16,6 +16,7 @@ from InvoiceGenerator.api import Invoice, QrCodeBuilder
 import locale
 import warnings
 import os
+import six
 
 
 def _(*args, **kwargs):
@@ -84,13 +85,10 @@ def prepare_invoice_draw(self):
 
 #Fix for http://bugs.python.org/issue15276.
 def fix_grouping(bytestring):
-    try:
-        return bytestring
-    except UnicodeDecodeError:
-        return bytestring.decode("utf-8")
+    return six.u(bytestring)
 
 
-def currency(amount, unit="Kč"):
+def currency(amount, unit=u"Kč"):
     return fix_grouping(locale.currency(amount, symbol=False, grouping=True)).replace(u",00", u",-") + " " + unit
     # I need different symbols with one locale
     #return fix_grouping(locale.currency(amount, grouping=True)).replace(u",00 %s" % unit, u",- %s   " % unit)
