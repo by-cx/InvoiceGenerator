@@ -48,7 +48,10 @@ setup(
     install_requires=[
         "reportlab", "pillow", "qrplatba>=0.3.3"
     ],
-    package_data={'InvoiceGenerator': ['locale/*/LC_MESSAGES/*']},
+    package_data={
+        'InvoiceGenerator': ['locale/*/LC_MESSAGES/*'],
+        'InvoiceGenerator': ['fonts/*'],
+    },
     test_suite='tests',
     command_options={
         'build_sphinx': {
