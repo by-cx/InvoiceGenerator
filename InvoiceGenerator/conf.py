@@ -6,13 +6,13 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__)))
 LANGUAGE = 'cs'
 
 def get_gettext(lang):
-    import ugettext
+    import gettext
     path =  os.path.join(PROJECT_ROOT, 'locale')
-    t = ugettext.translation('messages', path, languages=[lang],
+    t = gettext.translation('messages', path, languages=[lang],
                             codeset='utf8')
     t.install()
 
-    return lambda message: t.ugettext(message)
+    return lambda message: t.gettext(message)
 
 try:
     lang = os.environ.get("INVOICE_LANG", LANGUAGE)
