@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(os.path.join(__file__)))
 
@@ -12,7 +13,10 @@ def get_gettext(lang):
                             codeset='utf8')
     t.install()
 
-    return lambda message: t.gettext(message)
+    if sys.version_info >= (3,0):
+        return lambda message: t.gettext(message)
+    else:
+        return lambda message: t.ugettext(message)
 
 try:
     lang = os.environ.get("INVOICE_LANG", LANGUAGE)
