@@ -10,7 +10,7 @@ def get_gettext(lang):
     import gettext
     path =  os.path.join(PROJECT_ROOT, 'locale')
     t = gettext.translation('messages', path, languages=[lang],
-                            codeset='utf8')
+                            codeset='utf8', fallback=True)
     t.install()
 
     if sys.version_info >= (3,0):

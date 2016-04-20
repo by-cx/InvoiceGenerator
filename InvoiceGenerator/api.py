@@ -149,7 +149,7 @@ class Invoice(UnicodeProperty):
     # Please dont use this style of attributs, it much more
     # complicated to develop something - IDE can't help with this
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'number', 'iban', 'swift', )
+              'number', 'iban', 'swift', )
     use_tax = False
 
     rounding_result = False
@@ -166,6 +166,8 @@ class Invoice(UnicodeProperty):
         self.date = None
         self.payback = None
         self.taxable_date = None
+        self.currency_locale = "cs_CZ.UTF-8"
+        self.currency = u"Kč"
 
         for attr in self._attrs:
             self.__setattr__(attr, '')
@@ -220,7 +222,7 @@ class Invoice(UnicodeProperty):
 
 class Correction(Invoice):
     _attrs = ('number', 'reason', 'title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'date', 'payback', 'taxable_date')
+              'date', 'payback', 'taxable_date')
 
     def __init__(self, client, provider, creator):
         super(Correction, self).__init__(client, provider, creator)
