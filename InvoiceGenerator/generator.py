@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, datetime
+import os
+import datetime
 from reportlab.pdfgen.canvas import Canvas
 
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import cm, mm, inch, pica
+from reportlab.lib.units import mm
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from tempfile import NamedTemporaryFile
 
 from .api import Invoice as ApiInvoice
 from .pdf import BaseInvoice
+
 
 class Address:
     firstname = ""
@@ -38,6 +40,7 @@ class Address:
             self.email,
         ]
 
+
 class Item:
     name = ""
     count = 0
@@ -45,6 +48,7 @@ class Item:
 
     def total(self):
         return self.count*self.price
+
 
 class Invoice:
     client = Address()
@@ -67,7 +71,7 @@ class Invoice:
 
         self.pdffile = NamedTemporaryFile(delete=False)
 
-        self.pdf = Canvas(self.pdffile.name, pagesize = letter)
+        self.pdf = Canvas(self.pdffile.name, pagesize=letter)
         self.pdf.setFont("DejaVu", 15)
         self.pdf.setStrokeColorRGB(0, 0, 0)
 
@@ -110,11 +114,11 @@ class Invoice:
     def getContent(self):
         # Texty
         self.drawMain()
-        self.drawProvider(self.TOP-10,self.LEFT+3)
-        self.drawClient(self.TOP-30,self.LEFT+91)
-        self.drawPayment(self.TOP-47,self.LEFT+3)
-        self.drawItems(self.TOP-80,self.LEFT)
-        self.drawDates(self.TOP-10,self.LEFT+91)
+        self.drawProvider(self.TOP-10, self.LEFT+3)
+        self.drawClient(self.TOP-30, self.LEFT+91)
+        self.drawPayment(self.TOP-47, self.LEFT+3)
+        self.drawItems(self.TOP-80, self.LEFT)
+        self.drawDates(self.TOP-10, self.LEFT+91)
 
         #self.pdf.setFillColorRGB(0, 0, 0)
 
@@ -156,7 +160,7 @@ class Invoice:
         path.lineTo((self.LEFT+176)*mm, (self.TOP-23)*mm)
         self.pdf.drawPath(path, True, True)
 
-    def drawClient(self,TOP,LEFT):
+    def drawClient(self, TOP, LEFT):
         self.pdf.setFont("DejaVu", 12)
         self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Odběratel")
         self.pdf.setFont("DejaVu", 8)
@@ -167,7 +171,7 @@ class Invoice:
         text.textLines("\n".join(self.client.getContactLines()))
         self.pdf.drawText(text)
 
-    def drawProvider(self,TOP,LEFT):
+    def drawProvider(self, TOP, LEFT):
         self.pdf.setFont("DejaVu", 12)
         self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Dodavatel")
         self.pdf.setFont("DejaVu", 8)
@@ -180,17 +184,17 @@ class Invoice:
         if self.provider.note:
             self.pdf.drawString((LEFT+2)*mm, (TOP-26)*mm, self.provider.note)
 
-    def drawPayment(self,TOP,LEFT):
+    def drawPayment(self, TOP, LEFT):
         self.pdf.setFont("DejaVu", 11)
         self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Údaje pro platbu")
         #self.pdf.setFillColorRGB(255, 0, 0)
         text = self.pdf.beginText((LEFT+2)*mm, (TOP-6)*mm)
         text.textLines("""%s
 Číslo účtu: %s
-Variabilní symbol: %s"""%(self.provider.bank_name ,self.provider.bank_account, self.vs))
+Variabilní symbol: %s""" % (self.provider.bank_name, self.provider.bank_account, self.vs))
         self.pdf.drawText(text)
 
-    def drawItems(self,TOP,LEFT):
+    def drawItems(self, TOP, LEFT):
         # Items
         path = self.pdf.beginPath()
         path.moveTo((LEFT)*mm, (TOP-4)*mm)
@@ -200,21 +204,21 @@ Variabilní symbol: %s"""%(self.provider.bank_name ,self.provider.bank_account, 
         self.pdf.setFont("DejaVu", 9)
         self.pdf.drawString((LEFT+1)*mm, (TOP-2)*mm, "Fakturuji vám:")
 
-        i=9
+        i = 9
         self.pdf.drawString((LEFT+100)*mm, (TOP-i)*mm, "Množství")
         self.pdf.drawString((LEFT+122)*mm, (TOP-i)*mm, "Cena za jedn.")
         self.pdf.drawString((LEFT+150)*mm, (TOP-i)*mm, "Cena celkem")
-        i+=5
+        i += 5
 
         # List
-        total=0.0
+        total = 0.0
         for x in self.items:
             self.pdf.drawString((LEFT+1)*mm, (TOP-i)*mm, x.name)
-            i+=5
+            i += 5
             self.pdf.drawString((LEFT+100)*mm, (TOP-i)*mm, "%d ks" % x.count)
             self.pdf.drawString((LEFT+122)*mm, (TOP-i)*mm, "%.2f,- kč" % x.price)
             self.pdf.drawString((LEFT+150)*mm, (TOP-i)*mm, "%.2f,- kč" % (x.total()))
-            i+=5
+            i += 5
             total += x.total()
 
         path = self.pdf.beginPath()
@@ -237,8 +241,7 @@ Variabilní symbol: %s"""%(self.provider.bank_name ,self.provider.bank_account, 
 
         self.pdf.drawString((LEFT+112)*mm, (TOP-i-75)*mm, "Vystavil: %s" % self.creator)
 
-
-    def drawDates(self,TOP,LEFT):
+    def drawDates(self, TOP, LEFT):
         today = datetime.datetime.today()
         payback = today+datetime.timedelta(self.payment_days)
 
@@ -246,6 +249,7 @@ Variabilní symbol: %s"""%(self.provider.bank_name ,self.provider.bank_account, 
         self.pdf.drawString((LEFT)*mm, (TOP+1)*mm, "Datum vystavení: %s" % today.strftime("%d.%m.%Y"))
         self.pdf.drawString((LEFT)*mm, (TOP-4)*mm, "Datum splatnosti: %s" % payback.strftime("%d.%m.%Y"))
         self.pdf.drawString((LEFT)*mm, (TOP-9)*mm, "Forma úhrady: " + self.paytype)
+
 
 class Generator(object):
 
