@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import unittest
+import os
 
 from tempfile import NamedTemporaryFile
 import datetime
 
 from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator
 from InvoiceGenerator.pdf import SimpleInvoice, CorrectingInvoice, ProformaInvoice
+from PyPDF2 import PdfFileReader
 
 
 class TestBaseInvoice(unittest.TestCase):
@@ -39,6 +41,7 @@ class TestBaseInvoice(unittest.TestCase):
         client.note = u'zapsaná v obchodním rejstříku vedeném městským soudem v Praze,\noddíl C, vložka 176551'
 
         invoice = Invoice(client, provider, Creator('blah'))
+        invoice.use_tax = True
         invoice.title = u"Testovací faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
@@ -68,6 +71,11 @@ class TestBaseInvoice(unittest.TestCase):
         pdf = CorrectingInvoice(invoice)
         pdf.gen(tmp_file1.name)
 
+        pdf = PdfFileReader(tmp_file1)
+        pdf_string = pdf.pages[1].extractText()
+        self.assertTrue(u"Celkem s DPH: 32ƒ255,-ƒK…" in pdf_string)
+        self.assertTrue(u"Vytvo⁄il: blah" in pdf_string)
+
     def test_generate_proforma(self):
         provider = Provider('Pupik')
         provider.address = 'Kubelikova blah blah blah'
@@ -93,6 +101,7 @@ class TestBaseInvoice(unittest.TestCase):
 
         invoice = Invoice(client, provider, Creator('blah'))
         invoice.number = 'F20140007'
+        invoice.use_tax = True
         invoice.title = u"Proforma faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
@@ -116,16 +125,29 @@ class TestBaseInvoice(unittest.TestCase):
         pdf = ProformaInvoice(invoice)
         pdf.gen(tmp_file.name, True)
 
+        pdf = PdfFileReader(tmp_file)
+        pdf_string = pdf.pages[1].extractText()
+        self.assertTrue(u"Celkem s DPH: 32ƒ255,-ƒK…" in pdf_string)
+
     def test_generate_with_vat(self):
+        os.environ["INVOICE_LANG"] = "en"
         invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
         invoice.number = 'F20140001'
+        invoice.use_tax = True
         invoice.add_item(Item(32, 600))
         invoice.add_item(Item(60, 50, tax=10))
         invoice.add_item(Item(50, 60, tax=5))
         invoice.add_item(Item(5, 600, tax=50))
         invoice.currency_locale = 'en_US.UTF-8'
+        invoice.currency = 'USD'
 
         tmp_file = NamedTemporaryFile(delete=False)
 
         pdf = SimpleInvoice(invoice)
         pdf.gen(tmp_file.name)
+
+        pdf = PdfFileReader(tmp_file)
+        pdf_string = pdf.pages[0].extractText()
+        self.assertTrue(u"$3,000.00" in pdf_string)
+        self.assertTrue(u"Total with tax: $30,150.00" in pdf_string)
+        self.assertTrue(u"Creator: blah" in pdf_string)

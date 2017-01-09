@@ -46,7 +46,10 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
     install_requires=[
-        "reportlab", "pillow", "qrplatba>=0.3.3"
+        "reportlab",
+        "pillow",
+        "qrplatba>=0.3.3",
+        'babel',
     ],
     package_data={
         'InvoiceGenerator': ['locale/*/LC_MESSAGES/*'],

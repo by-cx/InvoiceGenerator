@@ -19,8 +19,9 @@ class AddressTest(unittest.TestCase):
         self.assertRaises(TypeError, self.addresss_object)
 
     def test_check_data_types(self):
-        address = self.addresss_object(**{key: str(uuid.uuid4())
-                                        for key in self.attrs})
+        address = self.addresss_object(
+            **{key: str(uuid.uuid4()) for key in self.attrs}
+        )
         for key in self.attrs:
             value = address.__getattribute__(key)
             self.assertIsInstance(value, string_types, msg="Attribute %s with type %s is not string type." % (key, type(value)))
@@ -208,7 +209,7 @@ class InvoiceTest(unittest.TestCase):
         invoice.add_item(Item(500, 5, tax=0))
         invoice.add_item(Item(5, 500, tax=0))
 
-        expected = [(0.00, 5000.0, 5000.0, 0),(50.0, 2000.0, 3000.0, 1000.0)]
+        expected = [(0.00, 5000.0, 5000.0, 0), (50.0, 2000.0, 3000.0, 1000.0)]
 
         self.assertEquals(expected, invoice.generate_breakdown_vat_table())
 

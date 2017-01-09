@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from PIL import Image
 import qrcode
-import datetime
 
 from InvoiceGenerator.conf import _
 
 __all__ = ['Client', 'Provider', 'Creator', 'Item', 'Invoice']
+
 
 class UnicodeProperty(object):
     _attrs = ()
@@ -14,6 +13,7 @@ class UnicodeProperty(object):
         if key in self._attrs:
             value = value
         self.__dict__[key] = value
+
 
 class Address(UnicodeProperty):
     _attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
@@ -37,7 +37,6 @@ class Address(UnicodeProperty):
         self.ir = ir
         self.logo_filename = logo_filename
 
-
     def get_address_lines(self):
         address_line = [
             self.summary,
@@ -58,8 +57,10 @@ class Address(UnicodeProperty):
             self.email,
             ]
 
+
 class Client(Address):
     pass
+
 
 class Provider(Address):
     pass
@@ -71,6 +72,7 @@ class Creator(UnicodeProperty):
     def __init__(self, name, stamp_filename=''):
         self.name = name
         self.stamp_filename = stamp_filename
+
 
 class Item(object):
 
@@ -149,7 +151,7 @@ class Invoice(UnicodeProperty):
     # Please dont use this style of attributs, it much more
     # complicated to develop something - IDE can't help with this
     _attrs = ('title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'number', 'iban', 'swift', )
+              'number', 'iban', 'swift', )
     use_tax = False
 
     rounding_result = False
@@ -166,6 +168,8 @@ class Invoice(UnicodeProperty):
         self.date = None
         self.payback = None
         self.taxable_date = None
+        self.currency_locale = "cs_CZ.UTF-8"
+        self.currency = u"Kč"
 
         for attr in self._attrs:
             self.__setattr__(attr, '')
@@ -198,8 +202,8 @@ class Invoice(UnicodeProperty):
                 table[item.tax] = {'total': item.total, 'total_tax': item.total_tax, 'tax': item.count_tax()}
             else:
                 table[item.tax]['total'] += item.total
-                table[item.tax]['total_tax'] +=  item.total_tax
-                table[item.tax]['tax'] +=  item.count_tax()
+                table[item.tax]['total_tax'] += item.total_tax
+                table[item.tax]['tax'] += item.count_tax()
 
         return table
 
@@ -213,14 +217,15 @@ class Invoice(UnicodeProperty):
 
     def generate_breakdown_vat_table(self):
         rows = []
-        for vat,items in self.generate_breakdown_vat().items():
+        for vat, items in self.generate_breakdown_vat().items():
              rows.append((vat, items['total'], items['total_tax'], items['tax']))
 
         return rows
 
+
 class Correction(Invoice):
     _attrs = ('number', 'reason', 'title', 'variable_symbol', 'specific_symbol', 'paytype',
-              'currency', 'currency_locale', 'date', 'payback', 'taxable_date')
+              'date', 'payback', 'taxable_date')
 
     def __init__(self, client, provider, creator):
         super(Correction, self).__init__(client, provider, creator)
@@ -254,7 +259,7 @@ class QrCodeBuilder(object):
             pass
 
         qr_kwargs = {k: v for k, v in qr_kwargs.items() if v}
-        
+
         return QRPlatbaGenerator(**qr_kwargs)
 
     @property
@@ -272,4 +277,3 @@ class QrCodeBuilder(object):
         if hasattr(self.tmp_file, 'name'):
             import os
             os.unlink(self.tmp_file.name)
-
