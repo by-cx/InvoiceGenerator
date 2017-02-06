@@ -33,12 +33,12 @@ class AddressTest(unittest.TestCase):
         zip_code = '1344234234'
         city = 'Prague'
 
-        address_object = self.addresss_object(summary=summary, address=address, city=city, zip_code=zip_code)
+        address_object = self.addresss_object(summary=summary, address=address, city=city, zip=zip_code)
 
         expected = [summary, address, u'%s %s' % (zip_code, city)]
         self.assertEquals(expected, address_object.get_address_lines())
 
-        address_object = self.addresss_object(summary=summary, address=address, address2=address2, city=city, zip_code=zip_code)
+        address_object = self.addresss_object(summary=summary, address=address, address2=address2, city=city, zip=zip_code)
 
         expected = [summary, address, address2, u'%s %s' % (zip_code, city)]
         self.assertEquals(expected, address_object.get_address_lines())
