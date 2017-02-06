@@ -10,7 +10,7 @@ from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
 
 class AddressTest(unittest.TestCase):
 
-    attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
+    attrs = ('summary', 'address', 'address2', 'city', 'zip', 'phone', 'email',
              'bank_name', 'bank_account', 'note', 'vat_id', 'ir')
 
     addresss_object = Address
@@ -29,12 +29,18 @@ class AddressTest(unittest.TestCase):
     def test_get_address_lines(self):
         summary = 'Py s.r.o.'
         address = 'Prague street'
+        address2 = 'Building 123'
         zip_code = '1344234234'
         city = 'Prague'
 
-        address_object = self.addresss_object(summary, address, city, zip_code)
+        address_object = self.addresss_object(summary=summary, address=address, city=city, zip_code=zip_code)
 
         expected = [summary, address, u'%s %s' % (zip_code, city)]
+        self.assertEquals(expected, address_object.get_address_lines())
+
+        address_object = self.addresss_object(summary=summary, address=address, address2=address2, city=city, zip_code=zip_code)
+
+        expected = [summary, address, address2, u'%s %s' % (zip_code, city)]
         self.assertEquals(expected, address_object.get_address_lines())
 
     def test_get_contact_lines(self):

@@ -16,15 +16,16 @@ class UnicodeProperty(object):
 
 
 class Address(UnicodeProperty):
-    _attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
+    _attrs = ('summary', 'address', 'address2', 'city', 'zip', 'phone', 'email',
               'bank_name', 'bank_account', 'note', 'vat_id', 'ir',
               'logo_filename')
 
-    def __init__(self, summary, address='', city='', zip='', phone='', email='',
+    def __init__(self, summary, address='', address2='', city='', zip='', phone='', email='',
                bank_name='', bank_account='', note='', vat_id='', ir='',
                logo_filename='', vat_note=''):
         self.summary = summary
         self.address = address
+        self.address2 = address2
         self.city = city
         self.zip = zip
         self.phone = phone
@@ -38,11 +39,21 @@ class Address(UnicodeProperty):
         self.logo_filename = logo_filename
 
     def get_address_lines(self):
-        address_line = [
-            self.summary,
-            self.address,
-            u'%s %s' % (self.zip, self.city)
-            ]
+        address_line = []
+
+        if self.address2 is '':
+            address_line = [
+                self.summary,
+                self.address,
+                u'%s %s' % (self.zip, self.city)
+                ]
+        else:
+            address_line = [
+                self.summary,
+                self.address,
+                self.address2,
+                u'%s %s' % (self.zip, self.city)
+                ]
         if self.vat_id:
             address_line.append(_(u'Vat in: %s') % self.vat_id)
 
