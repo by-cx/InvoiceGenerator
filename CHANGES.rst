@@ -1,6 +1,11 @@
 History
 =======
 
+0.5.4 - 2017-03-22
+------------------
+- Fix locale in build package
+
+
 0.5.3 - 2017-01-09
 -----------------
 - Use Babel for currency formating; fix and improve tests
