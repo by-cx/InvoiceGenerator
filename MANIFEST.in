@@ -2,3 +2,4 @@ include README.rst
 include CHANGES.rst
 include CONTRIBUTORS.rst
 recursive-include InvoiceGenerator/locale *
+recursive-include InvoiceGenerator/fonts *
