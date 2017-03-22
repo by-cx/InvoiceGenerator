@@ -51,10 +51,7 @@ setup(
         "qrplatba>=0.3.3",
         'babel',
     ],
-    package_data={
-        'InvoiceGenerator': ['locale/*/LC_MESSAGES/*'],
-        'InvoiceGenerator': ['fonts/*'],
-    },
+    include_package_data=True,
     test_suite='tests',
     command_options={
         'build_sphinx': {
