@@ -246,7 +246,7 @@ class QrCodeBuilder(object):
 
         qr_kwargs = {
             'account': invoice.provider.bank_account,
-            'amount': invoice.price_tax,
+            'amount': invoice.use_tax and invoice.price_tax or invoice.price,
             'x_ss': invoice.specific_symbol,
         }
 
