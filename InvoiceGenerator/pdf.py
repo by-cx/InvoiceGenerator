@@ -94,7 +94,7 @@ def currency(amount, unit, locale):
 
 
 class SimpleInvoice(BaseInvoice):
-
+    line_width = 62
     def gen(self, filename, generate_qr_code=False):
         self.filename = filename
         if generate_qr_code:
@@ -403,7 +403,7 @@ class SimpleInvoice(BaseInvoice):
 
         path = self.pdf.beginPath()
         path.moveTo((LEFT + 8) * mm, (TOP) * mm - height)
-        path.lineTo((LEFT + 62) * mm, (TOP) * mm - height)
+        path.lineTo((LEFT + self.line_width) * mm, (TOP) * mm - height)
         self.pdf.drawPath(path, True, True)
 
         self.pdf.drawString((LEFT + 10) * mm, (TOP - 5) * mm - height, '%s: %s' % (_(u'Creator'), self.invoice.creator.name))
