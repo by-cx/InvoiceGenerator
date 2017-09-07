@@ -1,5 +1,7 @@
 *.pyc
 *.pyo
+*.swp
+*~
 .idea*
 InvoiceGenerator.egg-info/
 build/
