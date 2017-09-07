@@ -1,6 +1,15 @@
 History
 =======
 
+0.6.0 - 2017-09-07
+------------------
+- Add support for Pohoda XML format
+- Added parameter Address.bank_code.
+  If present, the bank code will be written after dash to
+  the account number, otherwise whole
+  Address.bank_account will be used.
+
+
 0.5.4 - 2017-03-22
 ------------------
 - Fix locale in build package

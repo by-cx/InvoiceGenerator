@@ -25,7 +25,8 @@ class TestBaseInvoice(unittest.TestCase):
         provider.vat_id = 'CZ8590875682'
         provider.ir = '785684523'
         provider.email = 'mail@email.com'
-        provider.bank_account = '2600420569/2010'
+        provider.bank_account = '2600420569'
+        provider.bank_code = '2010'
         provider.bank_name = 'RB'
         provider.note = u'zapsaná v obchodním rejstříku vedeném městským soudem v Praze,\noddíl C, vložka 176551'
 

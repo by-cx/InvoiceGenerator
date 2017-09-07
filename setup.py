@@ -53,6 +53,8 @@ setup(
     ],
     tests_require=[
         "PyPDF2",
+        "xmlunittest",
+        "future",
     ],
     include_package_data=True,
     test_suite='tests',
