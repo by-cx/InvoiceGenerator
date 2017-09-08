@@ -50,6 +50,10 @@ Usage::
 	pdf = SimpleInvoice(invoice)
 	pdf.gen(tmp_file.name, generate_qr_code=True)
 
+Note: Due to Python's representational error, write numbers as integer (tax=10),
+Decimal (tax=Decimal('10.1') or string (tax='1.2') to avoid getting results with
+lot of decimal places.
+
 Hacking
 =======
 

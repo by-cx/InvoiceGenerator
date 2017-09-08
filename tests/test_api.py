@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import decimal
 import unittest
 import uuid
+from decimal import Decimal
+
 from six import string_types
 
 
@@ -76,32 +79,52 @@ class ItemTest(unittest.TestCase):
     def test_check_data_types_set_in_constructor(self):
         item = Item('42', '666', 'Item description', 'hour', '1.1')
 
-        self.assertIsInstance(item.count, float)
-        self.assertIsInstance(item.price, float)
+        self.assertIsInstance(item.count, Decimal)
+        self.assertEqual(item.count, 42)
+        self.assertIsInstance(item.price, Decimal)
+        self.assertEqual(item.price, 666)
         self.assertIsInstance(item.description, string_types)
         self.assertIsInstance(item.unit, string_types)
-        self.assertIsInstance(item.tax, float)
+        self.assertIsInstance(item.tax, Decimal)
+        self.assertEqual(item.tax, Decimal('1.1'))
 
     def test_getters_and_setters(self):
         item = Item(24, 666)
 
         item.count = '44'
-        item.price = '666'
+        item.price = '667'
         item.description = 'Foo bar'
         item.unit = 'hour'
         item.tax = '99.9'
 
-        self.assertIsInstance(item.count, float)
-        self.assertIsInstance(item.price, float)
+        self.assertIsInstance(item.count, Decimal)
+        self.assertEqual(item.count, 44)
+        self.assertIsInstance(item.price, Decimal)
+        self.assertEqual(item.price, 667)
         self.assertIsInstance(item.description, string_types)
         self.assertIsInstance(item.unit, string_types)
-        self.assertIsInstance(item.tax, float)
+        self.assertIsInstance(item.tax, Decimal)
+        self.assertEqual(item.tax, Decimal('99.9'))
 
     def test_count_total(self):
-        count = 42
-        price = 666
-        item = Item(count, price)
-        self.assertEquals(count * price, item.total)
+        item = Item(42, 666, tax=21)
+        self.assertEquals(27972, item.total)
+        self.assertEquals(Decimal('33846.12'), item.total_tax)
+
+    def test_count_total_strings(self):
+        item = Item('42', '666', tax='21')
+        self.assertEquals(27972, item.total)
+        self.assertEquals(Decimal('33846.12'), item.total_tax)
+
+    def test_count_total_decimal(self):
+        item = Item(Decimal(42), Decimal(666), tax=Decimal(21))
+        self.assertEquals(27972, item.total)
+        self.assertEquals(Decimal('33846.12'), item.total_tax)
+
+    def test_count_total_float(self):
+        item = Item(42.0, 666.0, tax=21.0)
+        self.assertEquals(27972, item.total)
+        self.assertEquals(Decimal('33846.12'), item.total_tax)
 
     def test_count_tax(self):
 
@@ -114,19 +137,22 @@ class ItemTest(unittest.TestCase):
     def test_count_total_with_tax(self):
         count = 24
         price = 42
-        tax = 99.9
+        tax = '99.9'
         item = Item(count, price, tax=tax)
-        expected = price * count * (1.0 + tax / 100.0)
-        self.assertEquals(expected, item.total_tax)
+        self.assertEquals(Decimal('2014.992'), item.total_tax)
 
     def test_count_total_with_none_tax(self):
         count = 24
         price = 42
         tax = None
         item = Item(count, price, tax=tax)
-        expected = price * count
-        self.assertIsInstance(item.tax, float)
-        self.assertEquals(expected, item.total_tax)
+        self.assertIsInstance(item.tax, Decimal)
+        self.assertEquals(1008, item.total_tax)
+
+    def test_count_total_with_zero_tax(self):
+        item = Item(24, 42, tax=0)
+        self.assertIsInstance(item.tax, Decimal)
+        self.assertEquals(1008, item.total_tax)
 
 
 class InvoiceTest(unittest.TestCase):
@@ -174,20 +200,12 @@ class InvoiceTest(unittest.TestCase):
 
     def test_price_tax(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
-        items = [Item(1, 500, tax=99.9), Item(2, 500, tax=99.9),
-                 Item(3, 500, tax=99.9)]
+        items = [Item(1, 500, tax='99.9'), Item(2, 500, tax='99.9'),
+                 Item(3, 500, tax='99.9')]
         for item in items:
             invoice.add_item(item)
 
-        self.assertEqual(sum([item.total_tax for item in items]), invoice.price_tax)
-
-    # This test is disabled since use_tax is only configurable by user
-    # def test_use_tax(self):
-    #     invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
-    #     invoice.add_item(Item(1, 500, tax=99.9))
-    #     invoice.add_item(Item(500, 5))
-
-    #     self.assertTrue(invoice.use_tax)
+        self.assertEqual(5997, invoice.price_tax)
 
     def test_generate_breakdown_vat(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
@@ -218,3 +236,15 @@ class InvoiceTest(unittest.TestCase):
         invoice.add_item(Item(1, 2.5, tax=50))
 
         self.assertEquals(0.25, invoice.difference_in_rounding)
+
+    def test_price_tax_rounding(self):
+        """
+        Test, that the price that sums up to 1756.5 gets rounded according to rounding strategy.
+        """
+        invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
+        invoice.add_item(Item(5, 290, tax=21))
+        invoice.rounding_result = True
+        invoice.use_tax = True
+        self.assertEqual(1754, invoice.price_tax)
+        invoice.rounding_strategy = decimal.ROUND_HALF_UP
+        self.assertEqual(1755, invoice.price_tax)

@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+import decimal
+from decimal import Decimal
+
 import qrcode
 
 from InvoiceGenerator.conf import _
@@ -76,11 +80,11 @@ class Creator(UnicodeProperty):
 
 class Item(object):
 
-    def __init__(self, count, price, description='', unit='', tax=0.0):
-        self._count = float(count)
-        self._price = float(price)
+    def __init__(self, count, price, description='', unit='', tax=Decimal(0)):
+        self.count = count
+        self.price = price
         self._description = description
-        self._unit = unit
+        self.unit = unit
         self.tax = tax
 
     @property
@@ -89,10 +93,7 @@ class Item(object):
 
     @property
     def total_tax(self):
-        if self.tax is not None:
-            return self.price * self.count * (1.0 + self.tax / 100.0)
-        else:
-            return self.price * self.count
+        return self.price * self.count * (Decimal(1) + self.tax / Decimal(100))
 
     def count_tax(self):
         return self.total_tax - self.total
@@ -111,10 +112,7 @@ class Item(object):
 
     @count.setter
     def count(self, value):
-        try:
-            self._count = float(value)
-        except TypeError:
-            self._count = 0
+        self._count = Decimal(value)
 
     @property
     def price(self):
@@ -122,10 +120,7 @@ class Item(object):
 
     @price.setter
     def price(self, value):
-        try:
-            self._price = float(value)
-        except TypeError:
-            self._price = 0.0
+        self._price = Decimal(value)
 
     @property
     def unit(self):
@@ -141,10 +136,10 @@ class Item(object):
 
     @tax.setter
     def tax(self, value):
-        try:
-            self._tax = float(value)
-        except TypeError:
-            self._tax = 0.0
+        if value is None:
+            self._tax = Decimal(0)
+        else:
+            self._tax = Decimal(value)
 
 
 class Invoice(UnicodeProperty):
@@ -155,6 +150,8 @@ class Invoice(UnicodeProperty):
     use_tax = False
 
     rounding_result = False
+
+    rounding_strategy = decimal.ROUND_HALF_EVEN
 
     def __init__(self, client, provider, creator):
         assert isinstance(client, Client)
@@ -174,13 +171,16 @@ class Invoice(UnicodeProperty):
         for attr in self._attrs:
             self.__setattr__(attr, '')
 
+    def _price_tax_unrounded(self):
+        return sum(item.total_tax for item in self.items)
+
     @property
     def price(self):
-        return self._round_result(sum([item.total for item in self.items]))
+        return self._round_result(sum(item.total for item in self.items))
 
     @property
     def price_tax(self):
-        return self._round_result(sum([item.total_tax for item in self.items]))
+        return self._round_result(self._price_tax_unrounded())
 
     def add_item(self, item):
         assert isinstance(item, Item)
@@ -190,10 +190,13 @@ class Invoice(UnicodeProperty):
     def items(self):
         return self._items
 
+    def _round_price(self, price):
+        return decimal.Decimal(price).quantize(0, rounding=self.rounding_strategy)
+
     @property
     def difference_in_rounding(self):
-        price = sum([item.total_tax for item in self.items])
-        return round(price, 0) - price
+        price = self._price_tax_unrounded()
+        return Decimal(self._round_price(price)) - price
 
     def _get_grouped_items_by_tax(self):
         table = {}
@@ -209,7 +212,7 @@ class Invoice(UnicodeProperty):
 
     def _round_result(self, price):
         if self.rounding_result:
-            price = round(price, 0)
+            return self._round_price(price)
         return price
 
     def generate_breakdown_vat(self):
