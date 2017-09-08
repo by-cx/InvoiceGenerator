@@ -51,6 +51,9 @@ setup(
         "qrplatba>=0.3.3",
         'babel',
     ],
+    tests_require=[
+        "PyPDF2",
+    ],
     include_package_data=True,
     test_suite='tests',
     command_options={

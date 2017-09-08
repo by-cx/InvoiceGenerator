@@ -6,7 +6,6 @@ before_install:
     - sudo locale-gen 'cs_CZ.UTF-8'
 install:
     - "pip install sphinx"
-    - "pip install PyPDF2"
     - "python setup.py install"
 script:
     - "python setup.py test"
