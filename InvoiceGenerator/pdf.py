@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
+import errno
+import locale
+import os
+import warnings
+
+from InvoiceGenerator.api import Invoice, QrCodeBuilder
+from InvoiceGenerator.conf import FONT_BOLD_PATH, FONT_PATH
+from InvoiceGenerator.conf import LANGUAGE, get_gettext
+
 from PIL import Image
 
-from reportlab.pdfgen.canvas import Canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import mm
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import Paragraph
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
+from babel.dates import format_date
+from babel.numbers import format_currency
 
-from InvoiceGenerator.conf import get_gettext, LANGUAGE
-from InvoiceGenerator.conf import FONT_PATH, FONT_BOLD_PATH
-from InvoiceGenerator.api import Invoice, QrCodeBuilder
-import babel.numbers
-import locale
-import warnings
-import os
-import errno
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.units import mm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.platypus import Paragraph
+
+
+def get_lang():
+    return os.environ.get("INVOICE_LANG", LANGUAGE)
 
 
 def _(*args, **kwargs):
-    lang = os.environ.get("INVOICE_LANG", LANGUAGE)
+    lang = get_lang()
     try:
         gettext = get_gettext(lang)
     except ImportError:
@@ -87,7 +94,7 @@ def prepare_invoice_draw(self):
 
 
 def currency(amount, unit, locale):
-    currency_string = babel.numbers.format_currency(amount, unit, locale=locale)
+    currency_string = format_currency(amount, unit, locale=locale)
     if locale == 'cs_CZ.UTF-8':
         currency_string = currency_string.replace(u",00", u",-")
     return currency_string
@@ -420,15 +427,16 @@ class SimpleInvoice(BaseInvoice):
         self.pdf.setFont('DejaVu', 10)
         top = TOP + 1
         items = []
+        lang = get_lang()
         if self.invoice.date and self.invoice.use_tax:
-            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure taxable invoice'), self.invoice.date)))
+            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure taxable invoice'), format_date(self.invoice.date, locale=lang))))
         elif self.invoice.date and not self.invoice.use_tax:
-            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure'), self.invoice.date)))
+            items.append((LEFT * mm, '%s: %s' % (_(u'Date of exposure'), format_date(self.invoice.date, locale=lang))))
         if self.invoice.payback:
-            items.append((LEFT * mm, '%s: %s' % (_(u'Due date'), self.invoice.payback)))
+            items.append((LEFT * mm, '%s: %s' % (_(u'Due date'), format_date(self.invoice.payback, locale=lang))))
         if self.invoice.taxable_date:
             items.append((LEFT * mm, '%s: %s' % (_(u'Taxable date'),
-                        self.invoice.taxable_date)))
+                        format_date(self.invoice.taxable_date, locale=lang))))
 
         if self.invoice.paytype:
             items.append((LEFT * mm, '%s: %s' % (_(u'Paytype'),
