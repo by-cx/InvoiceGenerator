@@ -3,8 +3,8 @@ import unittest
 
 from tempfile import NamedTemporaryFile
 
+from InvoiceGenerator.api import Client, Creator, Invoice, Item, Provider
 from InvoiceGenerator.generator import Generator
-from InvoiceGenerator.api import Client, Provider, Creator, Item, Invoice
 from InvoiceGenerator.pdf import SimpleInvoice
 
 

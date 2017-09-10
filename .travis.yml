@@ -7,6 +7,9 @@ before_install:
 install:
     - "pip install sphinx"
     - "python setup.py install"
+    - pip install flake8 flake8-blind-except flake8-comprehensions flake8-import-order flake8-tidy-imports
+before_script:
+    - flake8
 script:
     - "python setup.py test"
     - "python setup.py build_sphinx"

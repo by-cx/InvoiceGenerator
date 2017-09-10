@@ -4,16 +4,15 @@ import unittest
 import uuid
 from decimal import Decimal
 
+from InvoiceGenerator.api import Address, Client, Creator, Invoice, \
+    Item, Provider
+
 from six import string_types
-
-
-from InvoiceGenerator.api import Client, Provider, Address, Creator, Item, \
-    Invoice
 
 
 class AddressTest(unittest.TestCase):
 
-    attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
+    attrs = ('summary', 'address', 'city', 'zip_code', 'phone', 'email',
              'bank_name', 'bank_account', 'note', 'vat_id', 'ir')
 
     addresss_object = Address
@@ -164,8 +163,7 @@ class InvoiceTest(unittest.TestCase):
         sample_data = (
             {'client': '', 'provider': '', 'creator': ''},
             {'client': Client('foo'), 'provider': '', 'creator': ''},
-            {'client': Client('foo'), 'provider': Provider('bar'),
-             'creator': ''},
+            {'client': Client('foo'), 'provider': Provider('bar'), 'creator': ''},
 
         )
         for args in sample_data:
@@ -196,12 +194,15 @@ class InvoiceTest(unittest.TestCase):
         for item in items:
             invoice.add_item(item)
 
-        self.assertEqual(sum([item.total for item in items]), invoice.price)
+        self.assertEqual(3000, invoice.price)
 
     def test_price_tax(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
-        items = [Item(1, 500, tax='99.9'), Item(2, 500, tax='99.9'),
-                 Item(3, 500, tax='99.9')]
+        items = [
+            Item(1, 500, tax='99.9'),
+            Item(2, 500, tax='99.9'),
+            Item(3, 500, tax='99.9'),
+        ]
         for item in items:
             invoice.add_item(item)
 
@@ -216,7 +217,8 @@ class InvoiceTest(unittest.TestCase):
 
         expected = {
             0.0: {'total': 5000.0, 'total_tax': 5000.0, 'tax': 0.0},
-            50.0: {'total': 2000.0, 'total_tax': 3000.0, 'tax': 1000}}
+            50.0: {'total': 2000.0, 'total_tax': 3000.0, 'tax': 1000},
+        }
 
         self.assertEquals(expected, invoice.generate_breakdown_vat())
 

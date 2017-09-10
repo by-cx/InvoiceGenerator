@@ -59,7 +59,7 @@ class SimpleInvoice(BaseInvoice):
         ET.SubElement(address_element, '{%s}company' % self._typ_ns).text = str(address.summary)
         ET.SubElement(address_element, '{%s}street' % self._typ_ns).text = str(address.address)
         ET.SubElement(address_element, '{%s}city' % self._typ_ns).text = str(address.city)
-        ET.SubElement(address_element, '{%s}zip' % self._typ_ns).text = str(address.zip)
+        ET.SubElement(address_element, '{%s}zip' % self._typ_ns).text = str(address.zip_code)
         ET.SubElement(address_element, '{%s}phone' % self._typ_ns).text = str(address.phone)
         ET.SubElement(address_element, '{%s}ico' % self._typ_ns).text = str(address.ir)
         ET.SubElement(address_element, '{%s}dic' % self._typ_ns).text = str(address.vat_id)
