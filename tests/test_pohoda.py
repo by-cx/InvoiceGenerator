@@ -20,7 +20,7 @@ class TestBaseInvoice(unittest.TestCase, xmlunittest.XmlTestMixin):
     def test_generate(self):
         provider = Provider('Pupik')
         provider.address = 'Kubelikova blah blah blah'
-        provider.zip = '12655465'
+        provider.zip_code = '12655465'
         provider.city = 'Frantisek'
         provider.vat_id = 'CZ8590875682'
         provider.ir = '785684523'
@@ -33,7 +33,7 @@ class TestBaseInvoice(unittest.TestCase, xmlunittest.XmlTestMixin):
         client = Client('Kkkk')
         client.summary = 'Bla blah blah'
         client.address = 'Kubelikova blah blah blah'
-        client.zip = '12655465'
+        client.zip_code = '12655465'
         client.city = 'Frantisek'
         client.vat_id = 'CZ8590875682'
         client.ir = '785684523'

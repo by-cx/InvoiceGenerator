@@ -26,7 +26,7 @@ class Address(UnicodeProperty):
     :param summary: address header line - name of addressee or company name
     :param address: line of the address with street and house number
     :param city: city or part of the city
-    :param zip: zip code (PSČ in czech)
+    :param zip_code: zip code (PSČ in Czech)
     :param phone:
     :param email:
     :param bank_name:
@@ -37,17 +37,19 @@ class Address(UnicodeProperty):
     :param ir: Taxpayer identification Number (IČO in czech)
     :param logo_filename: path to the image of logo of the company
     """
-    _attrs = ('summary', 'address', 'city', 'zip', 'phone', 'email',
+    _attrs = ('summary', 'address', 'city', 'zip_code', 'phone', 'email',
               'bank_name', 'bank_account', 'bank_code', 'note', 'vat_id', 'ir',
               'logo_filename')
 
-    def __init__(self, summary, address='', city='', zip='', phone='', email='',
-               bank_name='', bank_account='', bank_code='', note='', vat_id='', ir='',
-               logo_filename='', vat_note=''):
+    def __init__(
+        self, summary, address='', city='', zip_code='', phone='', email='',
+        bank_name='', bank_account='', bank_code='', note='', vat_id='', ir='',
+        logo_filename='', vat_note='',
+    ):
         self.summary = summary
         self.address = address
         self.city = city
-        self.zip = zip
+        self.zip_code = zip_code
         self.phone = phone
         self.email = email
         self.bank_name = bank_name
@@ -70,7 +72,7 @@ class Address(UnicodeProperty):
         address_line = [
             self.summary,
             self.address,
-            u'%s %s' % (self.zip, self.city)
+            u'%s %s' % (self.zip_code, self.city),
             ]
         if self.vat_id:
             address_line.append(_(u'Vat in: %s') % self.vat_id)
@@ -367,8 +369,11 @@ class QrCodeBuilder(object):
         from tempfile import NamedTemporaryFile
         img = qrcode.make(self.qr.get_text())
 
-        self.tmp_file = NamedTemporaryFile(mode='w+b', suffix='.png',
-                                           delete=False)
+        self.tmp_file = NamedTemporaryFile(
+            mode='w+b',
+            suffix='.png',
+            delete=False,
+        )
         img.save(self.tmp_file)
         self.tmp_file.close()
         return self.tmp_file.name

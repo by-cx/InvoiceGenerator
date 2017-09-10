@@ -9,6 +9,10 @@ History
   the account number, otherwise whole
   Address.bank_account will be used.
 - Added much more complex documentation
+- Parameter ``Address.zip`` was renamed to ``Address.zip_code``
+- Code style fixes
+- Fixes for rounding: usage of ``decimal.Decimal`` and
+  added parameter ``Invoice.rounding_strategy``
 
 
 0.5.4 - 2017-03-22

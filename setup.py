@@ -1,17 +1,20 @@
 #!/usr/bin/python
 
 import os
-import sys
-import subprocess
 import shlex
-from setuptools import setup, find_packages
+import subprocess
+import sys
+
 import InvoiceGenerator
+
+from setuptools import find_packages, setup
 
 version = InvoiceGenerator.__versionstr__
 
 # release a version, publish to GitHub and PyPI
 if sys.argv[-1] == 'publish':
-    command = lambda cmd: subprocess.check_call(shlex.split(cmd))
+    def command(cmd):
+        subprocess.check_call(shlex.split(cmd))
     command('git tag v' + version)
     command('git push --tags origin master:master')
     command('python setup.py sdist upload')
@@ -20,6 +23,7 @@ if sys.argv[-1] == 'publish':
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 
 description = ''
 
@@ -62,6 +66,6 @@ setup(
         'build_sphinx': {
             'version': ('setup.py', version),
             'release': ('setup.py', version),
-        }
-    }
+        },
+    },
 )

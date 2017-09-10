@@ -10,8 +10,13 @@ LANGUAGE = 'cs'
 def get_gettext(lang):
     import gettext
     path = os.path.join(PROJECT_ROOT, 'locale')
-    t = gettext.translation('messages', path, languages=[lang],
-                            codeset='utf8', fallback=True)
+    t = gettext.translation(
+        'messages',
+        path,
+        languages=[lang],
+        codeset='utf8',
+        fallback=True,
+    )
     t.install()
 
     if sys.version_info >= (3, 0):
@@ -19,14 +24,15 @@ def get_gettext(lang):
     else:
         return lambda message: t.ugettext(message)
 
+
 try:
     lang = os.environ.get("INVOICE_LANG", LANGUAGE)
     _ = get_gettext(lang)
 except IOError:
-    _ = lambda x: x
+    def _(x): x
     print("Fix this!")
 except ImportError:
-    _ = lambda x: x
+    def _(x): x
 
 FONT_PATH = os.path.join(PROJECT_ROOT, "fonts", "DejaVuSans.ttf")
 FONT_BOLD_PATH = os.path.join(PROJECT_ROOT, "fonts", "DejaVuSans-Bold.ttf")
