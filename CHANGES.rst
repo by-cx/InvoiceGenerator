@@ -1,18 +1,22 @@
 History
 =======
 
-0.6.0 - 2017-09-07
+1.0.0 - 2018-05-17
 ------------------
 - Add support for Pohoda XML format
-- Added parameter Address.bank_code.
-  If present, the bank code will be written after dash to
-  the account number, otherwise whole
-  Address.bank_account will be used.
 - Added much more complex documentation
 - Parameter ``Address.zip`` was renamed to ``Address.zip_code``
+- Add parameters ``division`` and ``country`` to the  ``Address``
+- Added parameter ``Address.bank_code``
+  If present, the bank code will be written after dash to
+  the account number, otherwise whole
+  ``Address.bank_account`` will be used
+- Address are rendered to fit the area on the PDF invoice
 - Code style fixes
 - Fixes for rounding: usage of ``decimal.Decimal`` and
   added parameter ``Invoice.rounding_strategy``
+- Fix for QR code
+- Allow to set line width in ``SimpleInvoice``
 
 
 0.5.4 - 2017-03-22
