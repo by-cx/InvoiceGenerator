@@ -1,5 +1,6 @@
+################
 InvoiceGenerator
-================
+################
 
 .. toctree::
    :maxdepth: 2

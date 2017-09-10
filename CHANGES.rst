@@ -8,6 +8,7 @@ History
   If present, the bank code will be written after dash to
   the account number, otherwise whole
   Address.bank_account will be used.
+- Added much more complex documentation
 
 
 0.5.4 - 2017-03-22

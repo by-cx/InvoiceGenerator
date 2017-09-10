@@ -38,7 +38,7 @@ class AddressTest(unittest.TestCase):
         address_object = self.addresss_object(summary, address, city, zip_code)
 
         expected = [summary, address, u'%s %s' % (zip_code, city)]
-        self.assertEquals(expected, address_object.get_address_lines())
+        self.assertEquals(expected, address_object._get_address_lines())
 
     def test_get_contact_lines(self):
         phone = '56846846'
@@ -47,7 +47,7 @@ class AddressTest(unittest.TestCase):
         address = self.addresss_object('Foo s.r.o.', phone=phone, email=email)
 
         expected = [phone, email]
-        self.assertEquals(expected, address.get_contact_lines())
+        self.assertEquals(expected, address._get_contact_lines())
 
 
 class ClientTest(AddressTest):

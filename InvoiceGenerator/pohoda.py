@@ -8,8 +8,19 @@ from .pdf import BaseInvoice
 
 logger = logging.getLogger(__name__)
 
+__all__ = ['SimpleInvoice']
+
 
 class SimpleInvoice(BaseInvoice):
+    """
+    Generator of simple invoice in XML format for Pohoda accounting system
+
+    :param invoice: the invoice
+    :type invoice: Invoice
+    :param tax_rates: definition of tax rates used in Pohoda, left None for default values
+    :type tax_rates: dict
+    """
+
     tax_rates = {
         'high': 21,
         'low': 15,
@@ -94,6 +105,12 @@ class SimpleInvoice(BaseInvoice):
                     ET.SubElement(home_currency, '{%s}price%sVAT' % (self._typ_ns, rate_camel)).text = str(breakdown[rate]['tax'])
 
     def gen(self, filename):
+        """
+        Generate the invoice into file
+
+        :param filename: file in which the XML invoice will be written
+        :type filename: string or File
+        """
         ET.register_namespace('dat', self._dat_ns)
         ET.register_namespace('inv', self._inv_ns)
         ET.register_namespace('typ', self._typ_ns)
