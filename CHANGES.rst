@@ -1,7 +1,7 @@
 History
 =======
 
-0.6.0 - 2017-09-07
+1.0.0 - 2017-09-10
 ------------------
 - Add support for Pohoda XML format
 - Added parameter Address.bank_code.
