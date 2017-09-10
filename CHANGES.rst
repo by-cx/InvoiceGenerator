@@ -7,7 +7,7 @@ History
 
 
 0.5.3 - 2017-01-09
------------------
+------------------
 - Use Babel for currency formating; fix and improve tests
 
 0.5.2 - 2014-12-04

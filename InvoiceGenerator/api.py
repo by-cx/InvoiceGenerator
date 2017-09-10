@@ -3,9 +3,9 @@
 import decimal
 from decimal import Decimal
 
-import qrcode
-
 from InvoiceGenerator.conf import _
+
+import qrcode
 
 __all__ = ['Client', 'Provider', 'Creator', 'Item', 'Invoice']
 
@@ -221,7 +221,7 @@ class Invoice(UnicodeProperty):
     def generate_breakdown_vat_table(self):
         rows = []
         for vat, items in self.generate_breakdown_vat().items():
-             rows.append((vat, items['total'], items['total_tax'], items['tax']))
+            rows.append((vat, items['total'], items['total_tax'], items['tax']))
 
         return rows
 
