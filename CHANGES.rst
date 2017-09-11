@@ -1,13 +1,27 @@
 History
 =======
 
+1.0.0 - 2017-09-10
+------------------
+- Add support for Pohoda XML format
+- Added parameter Address.bank_code.
+  If present, the bank code will be written after dash to
+  the account number, otherwise whole
+  Address.bank_account will be used.
+- Added much more complex documentation
+- Parameter ``Address.zip`` was renamed to ``Address.zip_code``
+- Code style fixes
+- Fixes for rounding: usage of ``decimal.Decimal`` and
+  added parameter ``Invoice.rounding_strategy``
+
+
 0.5.4 - 2017-03-22
 ------------------
 - Fix locale in build package
 
 
 0.5.3 - 2017-01-09
------------------
+------------------
 - Use Babel for currency formating; fix and improve tests
 
 0.5.2 - 2014-12-04

@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import datetime
-from reportlab.pdfgen.canvas import Canvas
+import os
+
+from tempfile import NamedTemporaryFile
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-from tempfile import NamedTemporaryFile
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen.canvas import Canvas
 
 from .api import Invoice as ApiInvoice
 from .pdf import BaseInvoice
@@ -20,7 +21,7 @@ class Address:
     lastname = ""
     address = ""
     city = ""
-    zip = ""
+    zip_code = ""
     phone = ""
     email = ""
     bank_name = ""
@@ -31,7 +32,7 @@ class Address:
         return [
             "%s %s" % (self.firstname, self.lastname),
             self.address,
-            "%s %s" % (self.zip, self.city),
+            "%s %s" % (self.zip_code, self.city),
         ]
 
     def getContactLines(self):
@@ -80,7 +81,7 @@ class Invoice:
             os.unlink(self.pdffile.name)
 
     #############################################################
-    ## Setters
+    # Setters
     #############################################################
 
     def setClient(self, address):
@@ -108,7 +109,7 @@ class Invoice:
         self.items.append(item)
 
     #############################################################
-    ## Getters
+    # Getters
     #############################################################
 
     def getContent(self):
@@ -120,7 +121,7 @@ class Invoice:
         self.drawItems(self.TOP-80, self.LEFT)
         self.drawDates(self.TOP-10, self.LEFT+91)
 
-        #self.pdf.setFillColorRGB(0, 0, 0)
+        # self.pdf.setFillColorRGB(0, 0, 0)
 
         self.pdf.showPage()
         self.pdf.save()
@@ -134,7 +135,7 @@ class Invoice:
         return data
 
     #############################################################
-    ## Draw methods
+    # Draw methods
     #############################################################
 
     def drawMain(self):
@@ -187,11 +188,13 @@ class Invoice:
     def drawPayment(self, TOP, LEFT):
         self.pdf.setFont("DejaVu", 11)
         self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Údaje pro platbu")
-        #self.pdf.setFillColorRGB(255, 0, 0)
+        # self.pdf.setFillColorRGB(255, 0, 0)
         text = self.pdf.beginText((LEFT+2)*mm, (TOP-6)*mm)
-        text.textLines("""%s
+        text.textLines(
+            """%s
 Číslo účtu: %s
-Variabilní symbol: %s""" % (self.provider.bank_name, self.provider.bank_account, self.vs))
+Variabilní symbol: %s""" % (self.provider.bank_name, self.provider.bank_account, self.vs),
+        )
         self.pdf.drawText(text)
 
     def drawItems(self, TOP, LEFT):
@@ -210,7 +213,7 @@ Variabilní symbol: %s""" % (self.provider.bank_name, self.provider.bank_account
         self.pdf.drawString((LEFT+150)*mm, (TOP-i)*mm, "Cena celkem")
         i += 5
 
-        # List
+        # List
         total = 0.0
         for x in self.items:
             self.pdf.drawString((LEFT+1)*mm, (TOP-i)*mm, x.name)
@@ -229,7 +232,7 @@ Variabilní symbol: %s""" % (self.provider.bank_name, self.provider.bank_account
         self.pdf.setFont("DejaVu", 12)
         self.pdf.drawString((LEFT+130)*mm, (TOP-i-10)*mm, "Celkem: %d ,- kč" % total)
 
-        self.pdf.rect((LEFT)*mm, (TOP-i-17)*mm, (LEFT+156)*mm, (i+19)*mm, stroke=True, fill=False) #140,142
+        self.pdf.rect((LEFT)*mm, (TOP-i-17)*mm, (LEFT+156)*mm, (i+19)*mm, stroke=True, fill=False)  # 140,142
 
         if self.sign_image:
             self.pdf.drawImage(self.sign_image, (LEFT+98)*mm, (TOP-i-72)*mm)
@@ -263,13 +266,14 @@ class Generator(object):
         pdf = pdf_invoice(self.invoice)
         pdf.gen(filename)
 
+
 if __name__ == "__main__":
     client = Address()
     client.firstname = "Adam"
     client.lastname = "Štrauch"
     client.address = "Houští 474"
     client.city = "Lanškroun"
-    client.zip = "563 01"
+    client.zip_code = "563 01"
     client.phone = "+420777636388"
     client.email = "cx@initd.cz"
     client.bank_name = "GE Money Bank"
@@ -281,7 +285,7 @@ if __name__ == "__main__":
     provider.lastname = "Štrauch"
     provider.address = "Houští 474"
     provider.city = "Lanškroun"
-    provider.zip = "563 01"
+    provider.zip_code = "563 01"
     provider.phone = "+420777636388"
     provider.email = "cx@initd.cz"
     provider.bank_name = "GE Money Bank"

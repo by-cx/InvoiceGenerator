@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-import unittest
+import datetime
 import os
+import unittest
 
 from tempfile import NamedTemporaryFile
-import datetime
 
-from InvoiceGenerator.api import Invoice, Item, Client, Provider, Creator
-from InvoiceGenerator.pdf import SimpleInvoice, CorrectingInvoice, ProformaInvoice
+from InvoiceGenerator.api import Client, Creator, Invoice, Item, Provider
+from InvoiceGenerator.pdf import CorrectingInvoice, ProformaInvoice, SimpleInvoice
+
 from PyPDF2 import PdfFileReader
 
 
@@ -20,19 +21,20 @@ class TestBaseInvoice(unittest.TestCase):
     def test_generate(self):
         provider = Provider('Pupik')
         provider.address = 'Kubelikova blah blah blah'
-        provider.zip = '12655465'
+        provider.zip_code = '12655465'
         provider.city = 'Frantisek'
         provider.vat_id = 'CZ8590875682'
         provider.ir = '785684523'
         provider.email = 'mail@email.com'
-        provider.bank_account = '2600420569/2010'
+        provider.bank_account = '2600420569'
+        provider.bank_code = '2010'
         provider.bank_name = 'RB'
         provider.note = u'zapsaná v obchodním rejstříku vedeném městským soudem v Praze,\noddíl C, vložka 176551'
 
         client = Client('Kkkk')
         client.summary = 'Bla blah blah'
         client.address = 'Kubelikova blah blah blah'
-        client.zip = '12655465'
+        client.zip_code = '12655465'
         client.city = 'Frantisek'
         client.vat_id = 'CZ8590875682'
         client.ir = '785684523'
@@ -45,11 +47,16 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.title = u"Testovací faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
-        invoice.add_item(Item(5, 25.42,
-                              description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah "
-                                          u"blah blah blah blah blah blah blah blah blah blah blah blah blah blah "
-                                          u"blah blah blah blah blah blah blah blah blah blah blah",
-                              tax=20))
+        invoice.add_item(
+            Item(
+                5,
+                25.42,
+                description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah "
+                            u"blah blah blah blah blah blah blah blah blah blah blah blah blah blah "
+                            u"blah blah blah blah blah blah blah blah blah blah blah",
+                tax=20,
+            ),
+        )
         for i in range(1, 26):
             invoice.add_item(Item(5, 25.42, description=u"Popis", tax=0))
         invoice.specific_symbol = 666
@@ -73,13 +80,13 @@ class TestBaseInvoice(unittest.TestCase):
 
         pdf = PdfFileReader(tmp_file1)
         pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32ƒ255,-ƒK…" in pdf_string)
-        self.assertTrue(u"Vytvo⁄il: blah" in pdf_string)
+        self.assertTrue(u"Celkem s DPH: 32⁄255,-⁄K…" in pdf_string)
+        self.assertTrue(u"Vytvo‹il: blah" in pdf_string)
 
     def test_generate_proforma(self):
         provider = Provider('Pupik')
         provider.address = 'Kubelikova blah blah blah'
-        provider.zip = '12655465'
+        provider.zip_code = '12655465'
         provider.city = 'Frantisek'
         provider.vat_id = 'CZ8590875682'
         provider.ir = '785684523'
@@ -91,7 +98,7 @@ class TestBaseInvoice(unittest.TestCase):
         client = Client('Kkkk')
         client.summary = 'Bla blah blah'
         client.address = 'Kubelikova blah blah blah'
-        client.zip = '12655465'
+        client.zip_code = '12655465'
         client.city = 'Frantisek'
         client.vat_id = 'CZ8590875682'
         client.ir = '785684523'
@@ -105,11 +112,16 @@ class TestBaseInvoice(unittest.TestCase):
         invoice.title = u"Proforma faktura"
         invoice.add_item(Item(32, 600.6, description=u"Krátký popis", tax=50))
         invoice.add_item(Item(32, 2.5, tax=20))
-        invoice.add_item(Item(5, 25.42,
-                              description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah "
-                                          u"blah blah blah blah blah blah blah blah blah blah blah blah blah blah "
-                                          u"blah blah blah blah blah blah blah blah blah blah blah",
-                              tax=20))
+        invoice.add_item(
+            Item(
+                5,
+                25.42,
+                description=u"Dlouhý popis blah blah blah blah blah blah blah blah blah blah blah "
+                            u"blah blah blah blah blah blah blah blah blah blah blah blah blah blah "
+                            u"blah blah blah blah blah blah blah blah blah blah blah",
+                tax=20,
+            ),
+        )
         for i in range(1, 26):
             invoice.add_item(Item(5, 25.42, description=u"Popis", tax=0))
         invoice.specific_symbol = 666
@@ -127,7 +139,7 @@ class TestBaseInvoice(unittest.TestCase):
 
         pdf = PdfFileReader(tmp_file)
         pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32ƒ255,-ƒK…" in pdf_string)
+        self.assertTrue(u"Celkem s DPH: 32⁄255,-⁄K…" in pdf_string)
 
     def test_generate_with_vat(self):
         os.environ["INVOICE_LANG"] = "en"
