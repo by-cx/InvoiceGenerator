@@ -3,7 +3,6 @@
 
 import datetime
 import os
-
 from tempfile import NamedTemporaryFile
 
 from reportlab.lib.pagesizes import letter

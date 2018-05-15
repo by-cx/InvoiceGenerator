@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import xml.etree.cElementTree as ET
-
 from builtins import str
 
 from .pdf import BaseInvoice

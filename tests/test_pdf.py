@@ -2,7 +2,6 @@
 import datetime
 import os
 import unittest
-
 from tempfile import NamedTemporaryFile
 
 from InvoiceGenerator.api import Client, Creator, Invoice, Item, Provider
