@@ -44,11 +44,13 @@ class Address(UnicodeProperty):
     def __init__(
         self, summary, address='', city='', zip_code='', phone='', email='',
         bank_name='', bank_account='', bank_code='', note='', vat_id='', ir='',
-        logo_filename='', vat_note='',
+        logo_filename='', vat_note='', country='', division='',
     ):
         self.summary = summary
         self.address = address
+        self.division = division
         self.city = city
+        self.country = country
         self.zip_code = zip_code
         self.phone = phone
         self.email = email
@@ -69,11 +71,16 @@ class Address(UnicodeProperty):
             return self.bank_account
 
     def _get_address_lines(self):
-        address_line = [
+        address_line = []
+        if self.division:
+            address_line.append(self.division)
+        address_line += [
             self.summary,
             self.address,
-            u'%s %s' % (self.zip_code, self.city),
+            u' '.join(filter(None, (self.zip_code, self.city))),
             ]
+        if self.country:
+            address_line.append(self.country)
         if self.vat_id:
             address_line.append(_(u'Vat in: %s') % self.vat_id)
 
