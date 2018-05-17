@@ -62,11 +62,11 @@ msgstr "Č. účtu"
 
 #: pdf.py:205
 msgid "Variable symbol"
-msgstr "VS"
+msgstr "Variabilní sym."
 
 #: pdf.py:209
 msgid "Specific symbol"
-msgstr "SS"
+msgstr "Specifický sym."
 
 #: pdf.py:221
 msgid "List of items"
