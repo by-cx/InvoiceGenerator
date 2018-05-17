@@ -24,6 +24,7 @@ class Address(UnicodeProperty):
     Abstract address definition
 
     :param summary: address header line - name of addressee or company name
+    :param division: division of the organisation (second line of the address)
     :param address: line of the address with street and house number
     :param city: city or part of the city
     :param zip_code: zip code (PSČ in Czech)
@@ -34,12 +35,14 @@ class Address(UnicodeProperty):
     :param bank_code:
     :param note: note that will be written on the invoice
     :param vat_id: value added tax identification number (DIČ in czech)
+    :param vat_note: VAT note
     :param ir: Taxpayer identification Number (IČO in czech)
     :param logo_filename: path to the image of logo of the company
+    :param country: country
     """
     _attrs = ('summary', 'address', 'city', 'zip_code', 'phone', 'email',
               'bank_name', 'bank_account', 'bank_code', 'note', 'vat_id', 'ir',
-              'logo_filename')
+              'logo_filename', 'vat_note', 'country', 'division')
 
     def __init__(
         self, summary, address='', city='', zip_code='', phone='', email='',
@@ -71,11 +74,10 @@ class Address(UnicodeProperty):
             return self.bank_account
 
     def _get_address_lines(self):
-        address_line = []
+        address_line = [self.summary]
         if self.division:
             address_line.append(self.division)
         address_line += [
-            self.summary,
             self.address,
             u' '.join(filter(None, (self.zip_code, self.city))),
             ]
