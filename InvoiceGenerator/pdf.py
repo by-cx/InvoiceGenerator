@@ -119,7 +119,6 @@ class SimpleInvoice(BaseInvoice):
     :param invoice: the invoice
     :type invoice: Invoice
     """
-  
     line_width = 62
 
     def gen(self, filename, generate_qr_code=False):
