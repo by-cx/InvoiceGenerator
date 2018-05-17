@@ -19,7 +19,7 @@ from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.platypus import Paragraph
+from reportlab.platypus import Frame, KeepInFrame, Paragraph
 
 
 __all__ = ['SimpleInvoice', 'ProformaInvoice', 'CorrectingInvoice']
@@ -145,7 +145,7 @@ class SimpleInvoice(BaseInvoice):
         self._drawMain()
         self._drawTitle()
         self._drawProvider(self.TOP - 10, self.LEFT + 3)
-        self._drawClient(self.TOP - 35, self.LEFT + 91)
+        self._drawClient(self.TOP - 39, self.LEFT + 91)
         self._drawPayment(self.TOP - 47, self.LEFT + 3)
         self._drawQR(self.TOP - 39.4, self.LEFT + 61, 75.0)
         self._drawDates(self.TOP - 10, self.LEFT + 91)
@@ -209,49 +209,35 @@ class SimpleInvoice(BaseInvoice):
         path.lineTo((self.LEFT + 176) * mm, (self.TOP - 27) * mm)
         self.pdf.drawPath(path, True, True)
 
-    def _drawClient(self, TOP, LEFT):
-        self.pdf.setFont('DejaVu', 12)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Customer'))
+    def _drawAddress(self, top, left, width, height, header_string, address):
         self.pdf.setFont('DejaVu', 8)
-
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
-        text.textLines(self.invoice.client._get_address_lines())
+        text = self.pdf.beginText((left + 40) * mm, (top - 6) * mm)
+        text.textLines(address._get_contact_lines())
         self.pdf.drawText(text)
 
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
-        text.textLines(self.invoice.client._get_contact_lines())
-        self.pdf.drawText(text)
+        frame = Frame((left - 3) * mm, (top - 29) * mm, width*mm, height*mm)
+        header = ParagraphStyle('header', fontName='DejaVu', fontSize=12, leading=15)
+        default = ParagraphStyle('default', fontName='DejaVu', fontSize=8, leading=8.5)
+        small = ParagraphStyle('small', parent=default, fontSize=6, leading=6)
+        story = [
+            Paragraph(header_string, header),
+            Paragraph("<br/>".join(address._get_address_lines()), default),
+            Paragraph("<br/>".join(address.note.splitlines()), small),
+        ]
+        story_inframe = KeepInFrame(width*mm, height*mm, story)
+        frame.addFromList([story_inframe], self.pdf)
 
-        if self.invoice.client.note:
-            self.pdf.setFont('DejaVu', 6)
-            text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 29) * mm)
-            text.textLines(self.invoice.client.note.splitlines())
-            self.pdf.drawText(text)
-
-    def _drawProvider(self, TOP, LEFT):
-        self.pdf.setFont('DejaVu', 12)
-        self.pdf.drawString(LEFT * mm, TOP * mm, _(u'Provider'))
-        self.pdf.setFont('DejaVu', 8)
-
-        text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 6) * mm)
-        text.textLines(self.invoice.provider._get_address_lines())
-        self.pdf.drawText(text)
-
-        text = self.pdf.beginText((LEFT + 40) * mm, (TOP - 6) * mm)
-        text.textLines(self.invoice.provider._get_contact_lines())
-
-        self.pdf.drawText(text)
-        if self.invoice.provider.note:
-            self.pdf.setFont('DejaVu', 6)
-            text = self.pdf.beginText((LEFT + 2) * mm, (TOP - 23) * mm)
-            text.textLines(self.invoice.provider.note.splitlines())
-            self.pdf.drawText(text)
-
-        if self.invoice.provider.logo_filename:
-            im = Image.open(self.invoice.provider.logo_filename)
+        if address.logo_filename:
+            im = Image.open(address.logo_filename)
             height = 30.0
             width = float(im.size[0]) / (float(im.size[1])/height)
-            self.pdf.drawImage(self.invoice.provider.logo_filename, (LEFT + 84) * mm - width, (TOP - 4) * mm, width, height)
+            self.pdf.drawImage(self.invoice.provider.logo_filename, (left + 84) * mm - width, (top - 4) * mm, width, height)
+
+    def _drawClient(self, TOP, LEFT):
+        self._drawAddress(TOP, LEFT, 88, 41, _(u'Customer'), self.invoice.client)
+
+    def _drawProvider(self, TOP, LEFT):
+        self._drawAddress(TOP, LEFT, 88, 36, _(u'Provider'), self.invoice.provider)
 
     def _drawPayment(self, TOP, LEFT):
         self.pdf.setFont('DejaVu-Bold', 8)
@@ -530,7 +516,7 @@ class CorrectingInvoice(SimpleInvoice):
         self._drawMain()
         self._drawTitle()
         self._drawProvider(self.TOP - 10, self.LEFT + 3)
-        self._drawClient(self.TOP - 35, self.LEFT + 91)
+        self._drawClient(self.TOP - 39, self.LEFT + 91)
         self._drawPayment(self.TOP - 47, self.LEFT + 3)
         self.drawCorretion(self.TOP - 73, self.LEFT)
         self._drawDates(self.TOP - 10, self.LEFT + 91)

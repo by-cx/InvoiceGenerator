@@ -3,7 +3,6 @@
 
 import datetime
 import os
-
 from tempfile import NamedTemporaryFile
 
 from reportlab.lib.pagesizes import letter
@@ -161,27 +160,32 @@ class Invoice:
         path.lineTo((self.LEFT+176)*mm, (self.TOP-23)*mm)
         self.pdf.drawPath(path, True, True)
 
-    def drawClient(self, TOP, LEFT):
+    def _drawAddress(self, TOP, LEFT, header_string, address):
         self.pdf.setFont("DejaVu", 12)
-        self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Odběratel")
+        self.pdf.drawString((LEFT)*mm, (TOP)*mm, header_string)
         self.pdf.setFont("DejaVu", 8)
         text = self.pdf.beginText((LEFT+2)*mm, (TOP-6)*mm)
-        text.textLines("\n".join(self.client.getAddressLines()))
-        self.pdf.drawText(text)
-        text = self.pdf.beginText((LEFT+2)*mm, (TOP-28)*mm)
-        text.textLines("\n".join(self.client.getContactLines()))
-        self.pdf.drawText(text)
-
-    def drawProvider(self, TOP, LEFT):
-        self.pdf.setFont("DejaVu", 12)
-        self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Dodavatel")
-        self.pdf.setFont("DejaVu", 8)
-        text = self.pdf.beginText((LEFT+2)*mm, (TOP-6)*mm)
-        text.textLines("\n".join(self.provider.getAddressLines()))
+        text.textLines("\n".join(address.getAddressLines()))
         self.pdf.drawText(text)
         text = self.pdf.beginText((LEFT+40)*mm, (TOP-6)*mm)
-        text.textLines("\n".join(self.provider.getContactLines()))
+        text.textLines("\n".join(address.getContactLines()))
         self.pdf.drawText(text)
+
+    def drawClient(self, TOP, LEFT):
+        self._drawAddress(TOP, LEFT, "Odběratel", self.client)
+
+        # self.pdf.setFont("DejaVu", 12)
+        # self.pdf.drawString((LEFT)*mm, (TOP)*mm, "Odběratel")
+        # self.pdf.setFont("DejaVu", 8)
+        # text = self.pdf.beginText((LEFT+2)*mm, (TOP-6)*mm)
+        # text.textLines("\n".join(self.client.getAddressLines()))
+        # self.pdf.drawText(text)
+        # text = self.pdf.beginText((LEFT+2)*mm, (TOP-28)*mm)
+        # text.textLines("\n".join(self.client.getContactLines()))
+        # self.pdf.drawText(text)
+
+    def drawProvider(self, TOP, LEFT):
+        self._drawAddress(TOP, LEFT, "Dodavatel", self.provider)
         if self.provider.note:
             self.pdf.drawString((LEFT+2)*mm, (TOP-26)*mm, self.provider.note)
 

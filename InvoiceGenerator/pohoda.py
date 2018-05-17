@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import xml.etree.cElementTree as ET
-
 from builtins import str
 
 from .pdf import BaseInvoice
@@ -57,6 +56,8 @@ class SimpleInvoice(BaseInvoice):
     def _format_address(self, address, to_element):
         address_element = ET.SubElement(to_element, '{%s}address' % self._typ_ns)
         ET.SubElement(address_element, '{%s}company' % self._typ_ns).text = str(address.summary)
+        ET.SubElement(address_element, '{%s}division' % self._typ_ns).text = str(address.division)
+        ET.SubElement(address_element, '{%s}country' % self._typ_ns).text = str(address.country)
         ET.SubElement(address_element, '{%s}street' % self._typ_ns).text = str(address.address)
         ET.SubElement(address_element, '{%s}city' % self._typ_ns).text = str(address.city)
         ET.SubElement(address_element, '{%s}zip' % self._typ_ns).text = str(address.zip_code)
