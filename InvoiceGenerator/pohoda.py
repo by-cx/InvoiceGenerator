@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import logging
 import xml.etree.cElementTree as ET
 from builtins import str
@@ -53,46 +54,59 @@ class SimpleInvoice(BaseInvoice):
 
         return invoice_item
 
-    def _format_address(self, address, to_element):
-        address_element = ET.SubElement(to_element, '{%s}address' % self._typ_ns)
-        ET.SubElement(address_element, '{%s}company' % self._typ_ns).text = str(address.summary)
-        ET.SubElement(address_element, '{%s}division' % self._typ_ns).text = str(address.division)
-        ET.SubElement(address_element, '{%s}country' % self._typ_ns).text = str(address.country)
-        ET.SubElement(address_element, '{%s}street' % self._typ_ns).text = str(address.address)
-        ET.SubElement(address_element, '{%s}city' % self._typ_ns).text = str(address.city)
-        ET.SubElement(address_element, '{%s}zip' % self._typ_ns).text = str(address.zip_code)
-        ET.SubElement(address_element, '{%s}phone' % self._typ_ns).text = str(address.phone)
-        ET.SubElement(address_element, '{%s}ico' % self._typ_ns).text = str(address.ir)
-        ET.SubElement(address_element, '{%s}dic' % self._typ_ns).text = str(address.vat_id)
-        ET.SubElement(address_element, '{%s}email' % self._typ_ns).text = str(address.email)
+    def add_elements(self, parrent_element, namespace, element_map):
+        for element, content in element_map.items():
+            if content is not None:
+                if type(content) == datetime.date:
+                    content = content.isoformat()
+                ET.SubElement(parrent_element, '{%s}%s' % (namespace, element)).text = str(content)
 
-    def _format_date(self, date):
-        if date:
-            return date.isoformat()
+    def _format_address(self, address, to_element, my_address=False):
+        address_element = ET.SubElement(to_element, '{%s}address' % self._typ_ns)
+        element_map = {
+            'company': address.summary,
+            'street': address.address[:64],
+            'city': address.city[:45],
+            'zip': address.zip_code[:15],
+            'phone': address.phone[:40],
+            'ico': address.ir,
+            'dic': address.vat_id,
+            'email': address.email,
+        }
+        if not my_address:  # Division element is not present in my address
+            element_map.update({
+                'division': address.division[:32] if address.division else None,
+                'country': address.country,
+            })
+        self.add_elements(address_element, self._typ_ns, element_map)
 
     def _invoice_header(self, invoice_header):
         ET.SubElement(invoice_header, "{%s}invoiceType" % self._inv_ns).text = "issuedInvoice"
         number = ET.SubElement(invoice_header, "{%s}number" % self._inv_ns)
-        ET.SubElement(number, "{%s}numberRequested" % self._typ_ns).text = self.invoice.number
+        self.add_elements(number, self._typ_ns, {'numberRequested': self.invoice.number})
 
-        if self.invoice.date:
-            ET.SubElement(invoice_header, "{%s}date" % self._inv_ns).text = str(self._format_date(self.invoice.date))
-        if self.invoice.taxable_date:
-            ET.SubElement(invoice_header, "{%s}dateTax" % self._inv_ns).text = str(self._format_date(self.invoice.taxable_date))
-        if self.invoice.payback:
-            ET.SubElement(invoice_header, "{%s}dateDue" % self._inv_ns).text = str(self._format_date(self.invoice.payback))
-        ET.SubElement(invoice_header, "{%s}text" % self._inv_ns).text = str(self.invoice.title)
-        ET.SubElement(invoice_header, "{%s}symVar" % self._inv_ns).text = str(self.invoice.variable_symbol)
-        ET.SubElement(invoice_header, "{%s}symSpec" % self._inv_ns).text = str(self.invoice.specific_symbol)
+        header_element_map = {
+            "date": self.invoice.date,
+            "dateTax": self.invoice.taxable_date,
+            "dateDue": self.invoice.payback,
+            "text": self.invoice.title,
+            "symVar": self.invoice.variable_symbol,
+            "symSpec": self.invoice.specific_symbol,
+        }
+        self.add_elements(invoice_header, self._inv_ns, header_element_map)
+
         payment_account = ET.SubElement(invoice_header, "{%s}paymentAccount" % self._inv_ns)
-        ET.SubElement(payment_account, "{%s}accountNo" % self._typ_ns).text = str(self.invoice.provider.bank_account)
-        ET.SubElement(payment_account, "{%s}bankCode" % self._typ_ns).text = str(self.invoice.provider.bank_code)
+        account_element_map = {
+            "accountNo": self.invoice.provider.bank_account,
+            "bankCode": self.invoice.provider.bank_code,
+        }
+        self.add_elements(payment_account, self._typ_ns, account_element_map)
 
         partner_identity = ET.SubElement(invoice_header, "{%s}partnerIdentity" % self._inv_ns)
         self._format_address(self.invoice.client, partner_identity)
 
         my_identity = ET.SubElement(invoice_header, "{%s}myIdentity" % self._inv_ns)
-        self._format_address(self.invoice.provider, my_identity)
+        self._format_address(self.invoice.provider, my_identity, my_address=True)
 
     def _invoice_summary(self, invoice_summary):
         ET.SubElement(invoice_summary, "{%s}roundingDocument" % self._inv_ns).text = "math2one"
