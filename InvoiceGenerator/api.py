@@ -356,7 +356,7 @@ class QrCodeBuilder(object):
         from qrplatba import QRPlatbaGenerator
 
         qr_kwargs = {
-            'account': invoice.provider.bank_account,
+            'account': invoice.provider.bank_account_str,
             'amount': invoice.use_tax and invoice.price_tax or invoice.price,
             'x_ss': invoice.specific_symbol,
         }
