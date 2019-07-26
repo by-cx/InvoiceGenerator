@@ -230,7 +230,7 @@ class SimpleInvoice(BaseInvoice):
             im = Image.open(address.logo_filename)
             height = 30.0
             width = float(im.size[0]) / (float(im.size[1])/height)
-            self.pdf.drawImage(self.invoice.provider.logo_filename, (left + 84) * mm - width, (top - 4) * mm, width, height)
+            self.pdf.drawImage(self.invoice.provider.logo_filename, (left + 84) * mm - width, (top - 4) * mm, width, height, mask="auto")
 
     def _drawClient(self, TOP, LEFT):
         self._drawAddress(TOP, LEFT, 88, 41, _(u'Customer'), self.invoice.client)
@@ -456,7 +456,7 @@ class SimpleInvoice(BaseInvoice):
         if self.invoice.creator.stamp_filename:
             im = Image.open(self.invoice.creator.stamp_filename)
             height = float(im.size[1]) / (float(im.size[0])/200.0)
-            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT) * mm, (TOP - 2) * mm - height, 200, height)
+            self.pdf.drawImage(self.invoice.creator.stamp_filename, (LEFT) * mm, (TOP - 2) * mm - height, 200, height, mask="auto")
 
         path = self.pdf.beginPath()
         path.moveTo((LEFT + 8) * mm, (TOP) * mm - height)
