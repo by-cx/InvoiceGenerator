@@ -1,0 +1,170 @@
+# #-#-#-#-#  messages.pot (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+# #-#-#-#-#  messages.po (0.2.0)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-22 15:04+0100\n"
+"PO-Revision-Date: 2015-06-22 20:04+0100\n"
+"Last-Translator: rbas <rbas@rbas.cz>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: api.py:47
+#, python-format
+msgid "Vat in: %s"
+msgstr "DIČ: %s"
+
+#: api.py:50
+#, python-format
+msgid "IR: %s"
+msgstr "IČ: %s"
+
+#: pdf.py:51
+#, python-format
+msgid "Page %(page_number)d of %(page_count)d"
+msgstr "Página %(page_number)d z %(page_count)d"
+
+#: pdf.py:129
+#, python-format
+msgid "Invoice num.: %s"
+msgstr "Fatura num.: %s"
+
+#: pdf.py:154
+msgid "Customer"
+msgstr "Cliente"
+
+#: pdf.py:174
+msgid "Provider"
+msgstr "Fornecedor"
+
+#: pdf.py:199
+msgid "Payment information"
+msgstr "Informação do pagamento"
+
+#: pdf.py:204
+msgid "Account n."
+msgstr "Conta n."
+
+#: pdf.py:205
+msgid "Variable symbol"
+msgstr "Símbolo variável"
+
+#: pdf.py:209
+msgid "Specific symbol"
+msgstr "Símbolo específico"
+
+#: pdf.py:221
+msgid "List of items"
+msgstr "Relação de itens"
+
+#: pdf.py:223
+msgid "Description"
+msgstr "Descrição"
+
+#: pdf.py:227 pdf.py:240
+msgid "Units"
+msgstr "Unidades"
+
+#: pdf.py:229 pdf.py:242
+msgid "Price per one"
+msgstr "Preço unitário"
+
+#: pdf.py:231 pdf.py:244
+msgid "Total price"
+msgstr "Preço total"
+
+#: pdf.py:233 pdf.py:335
+msgid "Tax"
+msgstr "Impostos"
+
+#: pdf.py:235
+msgid "Total price with tax"
+msgstr "Preço total com impostos"
+
+#: pdf.py:320
+msgid "Rounding"
+msgstr "Arredondamento"
+
+#: pdf.py:331
+msgid "Total"
+msgstr "Total"
+
+#: pdf.py:334
+msgid "Breakdown VAT"
+msgstr "Imposto desagregado"
+
+#: pdf.py:335
+msgid "VAT rate"
+msgstr "Taxa do imposto"
+
+#: pdf.py:335
+msgid "Without VAT"
+msgstr "Sem imposto"
+
+#: pdf.py:335
+msgid "With VAT"
+msgstr "Com imposto"
+
+#: pdf.py:363
+msgid "Total with tax"
+msgstr "Total com imposto"
+
+#: pdf.py:385
+msgid "Creator"
+msgstr "Criador"
+
+#: InvoiceGenerator/pdf.py:402
+msgid "Date of exposure taxable invoice"
+msgstr "Data de tributação"
+
+msgid "Taxable invoice num.: %s"
+msgstr "Fatura com impostos num.: %s"
+
+#: pdf.py:404 pdf.py:465
+msgid "Due date"
+msgstr "Data de validade"
+
+#: pdf.py:406
+msgid "Taxable date"
+msgstr "Data de taxação"
+
+#: pdf.py:410 pdf.py:468
+msgid "Paytype"
+msgstr "Tipo de pagamento"
+
+#: pdf.py:443
+#, python-format
+msgid "Correcting document: %s"
+msgstr "Documento corrigido: %s"
+
+#: pdf.py:449
+#, python-format
+msgid "Correction document for invoice: %s"
+msgstr "Documento de correção para a fatura: %s"
+
+#: pdf.py:450
+#, python-format
+msgid "Reason to correction: %s"
+msgstr "Razão da correção: %s"
+
+#: pdf.py:463
+msgid "Date of exposure"
+msgstr "Data de exposição"
+
+msgid "Document num.: %s"
+msgstr "Documento num.: %s"
