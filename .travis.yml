@@ -1,7 +1,6 @@
 language: python
 python:
-    - "2.7"
-    - "3.4"
+    - "3.5"
 before_install:
     - sudo locale-gen 'cs_CZ.UTF-8'
 install:
