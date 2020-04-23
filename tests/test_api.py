@@ -229,7 +229,7 @@ class InvoiceTest(unittest.TestCase):
         invoice.add_item(Item(500, 5, tax=0))
         invoice.add_item(Item(5, 500, tax=0))
 
-        expected = [(0.00, 5000.0, 5000.0, 0), (50.0, 2000.0, 3000.0, 1000.0)]
+        expected = [(50.0, 2000.0, 3000.0, 1000.0), (0.00, 5000.0, 5000.0, 0)]
 
         self.assertEquals(expected, invoice.generate_breakdown_vat_table())
 
