@@ -1,8 +1,12 @@
 ================
 InvoiceGenerator
 ================
-.. image:: https://travis-ci.org/creckx/InvoiceGenerator.svg
-    :target: https://travis-ci.org/creckx/InvoiceGenerator
+.. image:: https://travis-ci.org/by-cx/InvoiceGenerator.svg?branch=master
+    :target: https://travis-ci.org/by-cx/InvoiceGenerator
+    
+.. image:: https://img.shields.io/pypi/v/InvoiceGenerator.svg
+  :target: https://pypi.python.org/pypi/InvoiceGenerator/
+  :alt: Latest Version
 
 This is library to generate a simple invoices.
 Currently supported formats are PDF and XML for Pohoda accounting system.
