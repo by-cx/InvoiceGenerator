@@ -79,8 +79,8 @@ class TestBaseInvoice(unittest.TestCase):
 
         pdf = PdfFileReader(tmp_file1)
         pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32⁄255,-⁄K…" in pdf_string)
-        self.assertTrue(u"Vytvo‹il: blah" in pdf_string)
+        self.assertTrue(u"Celkem s DPH: 32 255,- K…" in pdf_string)
+        self.assertTrue(u"Vytvo⁄il: blah" in pdf_string)
 
     def test_generate_proforma(self):
         provider = Provider('Pupik')
@@ -138,7 +138,7 @@ class TestBaseInvoice(unittest.TestCase):
 
         pdf = PdfFileReader(tmp_file)
         pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32⁄255,-⁄K…" in pdf_string)
+        self.assertTrue(u"Celkem s DPH: 32 255,- K…" in pdf_string)
 
     def test_generate_with_vat(self):
         os.environ["INVOICE_LANG"] = "en"

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import collections
 import decimal
 from decimal import Decimal
 
@@ -304,7 +305,7 @@ class Invoice(UnicodeProperty):
         return Decimal(self._round_price(price)) - price
 
     def _get_grouped_items_by_tax(self):
-        table = {}
+        table = collections.OrderedDict()
         for item in self.items:
             if item.tax not in table:
                 table[item.tax] = {'total': item.total, 'total_tax': item.total_tax, 'tax': item.count_tax()}
@@ -356,7 +357,7 @@ class QrCodeBuilder(object):
         from qrplatba import QRPlatbaGenerator
 
         qr_kwargs = {
-            'account': invoice.provider.bank_account,
+            'account': invoice.provider.bank_account_str(),
             'amount': invoice.use_tax and invoice.price_tax or invoice.price,
             'x_ss': invoice.specific_symbol,
         }
