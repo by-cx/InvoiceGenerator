@@ -1,6 +1,13 @@
 History
 =======
 
+1.1.0 - 2020-04-24
+------------------
+- Fix QR code on invoice
+- Drop Python 2 support
+- Add pt_BR translation
+- Add support for transparent PNGs
+
 1.0.0 - 2018-05-17
 ------------------
 - Add support for Pohoda XML format
