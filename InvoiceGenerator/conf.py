@@ -14,7 +14,7 @@ def get_gettext(lang):
         'messages',
         path,
         languages=[lang],
-        codeset='utf8',
+        class_='utf8',
         fallback=True,
     )
     t.install()
