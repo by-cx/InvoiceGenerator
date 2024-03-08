@@ -361,9 +361,9 @@ class SimpleInvoice(BaseInvoice):
             i -= 4.23
             if items_are_with_tax:
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%i", item.count, grouping=True), item.unit))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format_string("%i", item.count, grouping=True), item.unit))
                 else:
-                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%.2f", item.count, grouping=True), item.unit))
+                    self.pdf.drawRightString((LEFT + 85) * mm, (TOP - i) * mm, u'%s %s' % (locale.format_string("%.2f", item.count, grouping=True), item.unit))
                 self.pdf.drawRightString((LEFT + 110) * mm, (TOP - i) * mm, currency(item.price, self.invoice.currency, self.invoice.currency_locale))
                 self.pdf.drawRightString((LEFT + 134) * mm, (TOP - i) * mm, currency(item.total, self.invoice.currency, self.invoice.currency_locale))
                 self.pdf.drawRightString((LEFT + 144) * mm, (TOP - i) * mm, '%.0f %%' % item.tax)
@@ -371,9 +371,9 @@ class SimpleInvoice(BaseInvoice):
                 i += 5
             else:
                 if float(int(item.count)) == item.count:
-                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%i", item.count, grouping=True), item.unit))
+                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (locale.format_string("%i", item.count, grouping=True), item.unit))
                 else:
-                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (locale.format("%.2f", item.count, grouping=True), item.unit))
+                    self.pdf.drawRightString((LEFT + 118) * mm, (TOP - i) * mm, u'%s %s' % (locale.format_string("%.2f", item.count, grouping=True), item.unit))
                 self.pdf.drawRightString((LEFT + 148) * mm, (TOP - i) * mm, currency(item.price, self.invoice.currency, self.invoice.currency_locale))
                 self.pdf.drawRightString((LEFT + 173) * mm, (TOP - i) * mm, currency(item.total, self.invoice.currency, self.invoice.currency_locale))
                 i += 5
@@ -409,7 +409,7 @@ class SimpleInvoice(BaseInvoice):
             self.pdf.drawString((LEFT + 1) * mm, (TOP - i - 2) * mm, _(u'Breakdown VAT'))
             vat_list, tax_list, total_list, total_tax_list = [_(u'VAT rate')], [_(u'Tax')], [_(u'Without VAT')], [_(u'With VAT')]
             for vat, items in self.invoice.generate_breakdown_vat().items():
-                vat_list.append("%s%%" % locale.format('%.2f', vat))
+                vat_list.append("%s%%" % locale.format_string('%.2f', vat))
                 tax_list.append(currency(items['tax'], self.invoice.currency, self.invoice.currency_locale))
                 total_list.append(currency(items['total'], self.invoice.currency, self.invoice.currency_locale))
                 total_tax_list.append(currency(items['total_tax'], self.invoice.currency, self.invoice.currency_locale))
