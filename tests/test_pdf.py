@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 from InvoiceGenerator.api import Client, Creator, Invoice, Item, Provider
 from InvoiceGenerator.pdf import CorrectingInvoice, ProformaInvoice, SimpleInvoice
 
-from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfReader
 
 
 class TestBaseInvoice(unittest.TestCase):
@@ -77,10 +77,10 @@ class TestBaseInvoice(unittest.TestCase):
         pdf = CorrectingInvoice(invoice)
         pdf.gen(tmp_file1.name)
 
-        pdf = PdfFileReader(tmp_file1)
-        pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32 255,- K…" in pdf_string)
-        self.assertTrue(u"Vytvo⁄il: blah" in pdf_string)
+        pdf = PdfReader(tmp_file1)
+        pdf_string = pdf.pages[1].extract_text()
+        self.assertTrue(u"Celkem s DPH: 32 255,- Kč" in pdf_string)
+        self.assertTrue(u"Vytvořil: blah" in pdf_string)
 
     def test_generate_proforma(self):
         provider = Provider('Pupik')
@@ -136,9 +136,9 @@ class TestBaseInvoice(unittest.TestCase):
         pdf = ProformaInvoice(invoice)
         pdf.gen(tmp_file.name, True)
 
-        pdf = PdfFileReader(tmp_file)
-        pdf_string = pdf.pages[1].extractText()
-        self.assertTrue(u"Celkem s DPH: 32 255,- K…" in pdf_string)
+        pdf = PdfReader(tmp_file)
+        pdf_string = pdf.pages[1].extract_text()
+        self.assertTrue(u"Celkem s DPH: 32 255,- Kč" in pdf_string)
 
     def test_generate_with_vat(self):
         os.environ["INVOICE_LANG"] = "en"
@@ -157,8 +157,8 @@ class TestBaseInvoice(unittest.TestCase):
         pdf = SimpleInvoice(invoice)
         pdf.gen(tmp_file.name)
 
-        pdf = PdfFileReader(tmp_file)
-        pdf_string = pdf.pages[0].extractText()
+        pdf = PdfReader(tmp_file)
+        pdf_string = pdf.pages[0].extract_text()
         self.assertTrue(u"$3,000.00" in pdf_string)
         self.assertTrue(u"Total with tax: $30,150.00" in pdf_string)
         self.assertTrue(u"Creator: blah" in pdf_string)
