@@ -12,12 +12,14 @@ from setuptools import find_packages, setup
 version = InvoiceGenerator.__versionstr__
 
 # release a version, publish to GitHub and PyPI
-if sys.argv[-1] == 'publish':
+if sys.argv[-1] == "publish":
+
     def command(cmd):
         subprocess.check_call(shlex.split(cmd))
-    command('git tag v' + version)
-    command('git push --tags origin master:master')
-    command('python setup.py sdist upload')
+
+    command("git tag v" + version)
+    command("git push --tags origin master:master")
+    command("python setup.py sdist upload")
     sys.exit()
 
 
@@ -25,10 +27,10 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-description = ''
+description = ""
 
-for file_ in ('README', 'CHANGES', 'CONTRIBUTORS'):
-    description += read('%s.rst' % file_) + '\n\n'
+for file_ in ("README", "CHANGES", "CONTRIBUTORS"):
+    description += read("%s.rst" % file_) + "\n\n"
 
 
 setup(
@@ -40,7 +42,7 @@ setup(
     license="BSD",
     keywords="invoice invoices generator",
     url="https://github.com/creckx/InvoiceGenerator",
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
     long_description=description,
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -53,20 +55,20 @@ setup(
         "reportlab",
         "pillow",
         "qrplatba>=0.3.3",
-        'babel',
+        "babel",
     ],
     tests_require=[
         "PyPDF2",
-        "xmlunittest",
+        "xmlunittest @ git+https://github.com/mezka/python-xmlunittest/tree/fix-broken-lxml#egg=xmlunittest",
         "future",
-        'six'
+        "six",
     ],
     include_package_data=True,
-    test_suite='tests',
+    test_suite="tests",
     command_options={
-        'build_sphinx': {
-            'version': ('setup.py', version),
-            'release': ('setup.py', version),
+        "build_sphinx": {
+            "version": ("setup.py", version),
+            "release": ("setup.py", version),
         },
     },
 )
