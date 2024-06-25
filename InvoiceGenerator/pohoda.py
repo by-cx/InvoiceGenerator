@@ -57,7 +57,7 @@ class SimpleInvoice(BaseInvoice):
     def add_elements(self, parrent_element, namespace, element_map):
         for element, content in element_map.items():
             if content is not None:
-                if type(content) == datetime.date:
+                if isinstance(content, datetime.date):
                     content = content.isoformat()
                 ET.SubElement(parrent_element, '{%s}%s' % (namespace, element)).text = str(content)
 
