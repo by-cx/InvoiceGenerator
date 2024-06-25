@@ -63,12 +63,16 @@ setup(
         "future",
         "six",
     ],
+    extras_require={
+        "dev": [
+            "flake8",
+            "flake8-blind-except",
+            "flake8-comprehensions",
+            "flake8-import-order",
+            "flake8-tidy-imports",
+        ],
+        "docs": "sphinx",
+    },
     include_package_data=True,
     test_suite="tests",
-    command_options={
-        "build_sphinx": {
-            "version": ("setup.py", version),
-            "release": ("setup.py", version),
-        },
-    },
 )
