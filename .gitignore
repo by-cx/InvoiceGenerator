@@ -6,3 +6,4 @@
 InvoiceGenerator.egg-info/
 build/
 dist/
+.eggs
