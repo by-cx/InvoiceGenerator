@@ -37,7 +37,7 @@ class AddressTest(unittest.TestCase):
         address_object = self.addresss_object(summary, address, city, zip_code)
 
         expected = [summary, address, u'%s %s' % (zip_code, city)]
-        self.assertEquals(expected, address_object._get_address_lines())
+        self.assertEqual(expected, address_object._get_address_lines())
 
     def test_get_contact_lines(self):
         phone = '56846846'
@@ -46,7 +46,7 @@ class AddressTest(unittest.TestCase):
         address = self.addresss_object('Foo s.r.o.', phone=phone, email=email)
 
         expected = [phone, email]
-        self.assertEquals(expected, address._get_contact_lines())
+        self.assertEqual(expected, address._get_contact_lines())
 
 
 class ClientTest(AddressTest):
@@ -107,23 +107,23 @@ class ItemTest(unittest.TestCase):
 
     def test_count_total(self):
         item = Item(42, 666, tax=21)
-        self.assertEquals(27972, item.total)
-        self.assertEquals(Decimal('33846.12'), item.total_tax)
+        self.assertEqual(27972, item.total)
+        self.assertEqual(Decimal('33846.12'), item.total_tax)
 
     def test_count_total_strings(self):
         item = Item('42', '666', tax='21')
-        self.assertEquals(27972, item.total)
-        self.assertEquals(Decimal('33846.12'), item.total_tax)
+        self.assertEqual(27972, item.total)
+        self.assertEqual(Decimal('33846.12'), item.total_tax)
 
     def test_count_total_decimal(self):
         item = Item(Decimal(42), Decimal(666), tax=Decimal(21))
-        self.assertEquals(27972, item.total)
-        self.assertEquals(Decimal('33846.12'), item.total_tax)
+        self.assertEqual(27972, item.total)
+        self.assertEqual(Decimal('33846.12'), item.total_tax)
 
     def test_count_total_float(self):
         item = Item(42.0, 666.0, tax=21.0)
-        self.assertEquals(27972, item.total)
-        self.assertEquals(Decimal('33846.12'), item.total_tax)
+        self.assertEqual(27972, item.total)
+        self.assertEqual(Decimal('33846.12'), item.total_tax)
 
     def test_count_tax(self):
 
@@ -138,7 +138,7 @@ class ItemTest(unittest.TestCase):
         price = 42
         tax = '99.9'
         item = Item(count, price, tax=tax)
-        self.assertEquals(Decimal('2014.992'), item.total_tax)
+        self.assertEqual(Decimal('2014.992'), item.total_tax)
 
     def test_count_total_with_none_tax(self):
         count = 24
@@ -146,12 +146,12 @@ class ItemTest(unittest.TestCase):
         tax = None
         item = Item(count, price, tax=tax)
         self.assertIsInstance(item.tax, Decimal)
-        self.assertEquals(1008, item.total_tax)
+        self.assertEqual(1008, item.total_tax)
 
     def test_count_total_with_zero_tax(self):
         item = Item(24, 42, tax=0)
         self.assertIsInstance(item.tax, Decimal)
-        self.assertEquals(1008, item.total_tax)
+        self.assertEqual(1008, item.total_tax)
 
 
 class InvoiceTest(unittest.TestCase):
@@ -186,7 +186,7 @@ class InvoiceTest(unittest.TestCase):
         for item in [Item(1, 500), Item(2, 500), Item(3, 500)]:
             invoice.add_item(item)
 
-        self.assertEquals(3, len(invoice.items))
+        self.assertEqual(3, len(invoice.items))
 
     def test_price(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
@@ -220,7 +220,7 @@ class InvoiceTest(unittest.TestCase):
             50.0: {'total': 2000.0, 'total_tax': 3000.0, 'tax': 1000},
         }
 
-        self.assertEquals(expected, invoice.generate_breakdown_vat())
+        self.assertEqual(expected, invoice.generate_breakdown_vat())
 
     def test_generate_breakdown_vat_table(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
@@ -231,13 +231,13 @@ class InvoiceTest(unittest.TestCase):
 
         expected = [(50.0, 2000.0, 3000.0, 1000.0), (0.00, 5000.0, 5000.0, 0)]
 
-        self.assertEquals(expected, invoice.generate_breakdown_vat_table())
+        self.assertEqual(expected, invoice.generate_breakdown_vat_table())
 
     def test_difference_rounding(self):
         invoice = Invoice(Client('Foo'), Provider('Bar'), Creator('Blah'))
         invoice.add_item(Item(1, 2.5, tax=50))
 
-        self.assertEquals(0.25, invoice.difference_in_rounding)
+        self.assertEqual(0.25, invoice.difference_in_rounding)
 
     def test_price_tax_rounding(self):
         """
