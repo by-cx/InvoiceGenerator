@@ -29,9 +29,10 @@ jobs:
       run: |
         sudo locale-gen 'cs_CZ.UTF-8'
         python -m pip install --upgrade pip
-        pip install sphinx setuptools
+        pip install setuptools
         python setup.py install
-        pip install flake8 flake8-blind-except flake8-comprehensions flake8-import-order flake8-tidy-imports
+        pip install .[docs] 
+        pip install .[dev]
 
     - name: Run flake8
       run: |
@@ -43,4 +44,4 @@ jobs:
 
     - name: Build documentation
       run: |
-        python setup.py build_sphinx
+        sphinx-build doc/source doc/build
