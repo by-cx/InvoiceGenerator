@@ -12,6 +12,9 @@ This is library to generate a simple invoices.
 Currently supported formats are PDF and XML for Pohoda accounting system.
 PDF invoice is based on ReportLab.
 
+.. image:: https://raw.githubusercontent.com/mezka/InvoiceGenerator/master/example_with_vat.png
+   :alt: Example image of invoice
+
 Installation
 ============
 
