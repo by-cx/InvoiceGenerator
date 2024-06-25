@@ -14,6 +14,7 @@ PDF invoice is based on ReportLab.
 
 .. image:: https://raw.githubusercontent.com/mezka/InvoiceGenerator/master/example_with_vat.png
    :alt: Example image of invoice
+   :width: 25%
 
 Installation
 ============
