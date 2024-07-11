@@ -59,7 +59,7 @@ setup(
     ],
     tests_require=[
         "PyPDF2",
-        "xmlunittest @ git+https://github.com/mezka/python-xmlunittest.git@fix-broken-lxml#egg=xmlunittest",
+        "xmlunittest",
         "future",
         "six",
     ],
