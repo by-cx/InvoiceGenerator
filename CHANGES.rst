@@ -1,6 +1,10 @@
 History
 =======
 
+1.2.0 - 2024-07-14
+------------------
+- Large project update, support for Python 3.8 - 3.12
+
 1.1.0 - 2020-04-24
 ------------------
 - Fix QR code on invoice
