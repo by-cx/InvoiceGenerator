@@ -67,6 +67,12 @@ Define invoice data first::
 	invoice.add_item(Item(50, 60, description="Item 3", tax=0))
 	invoice.add_item(Item(5, 600, description="Item 4", tax=15))
 
+For Spanish invoices using Euro formatting::
+
+	os.environ["INVOICE_LANG"] = "es"
+	invoice.currency_locale = "es_ES.UTF-8"
+	invoice.currency = "EUR"
+
 Note: Due to Python's representational error, write numbers as integer ``tax=10``,
 Decimal ``tax=Decimal('10.1')`` or string ``tax='1.2'`` to avoid getting results with
 lot of decimal places.

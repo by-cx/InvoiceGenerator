@@ -54,7 +54,7 @@ setup(
     ],
     install_requires=[
         "reportlab",
-        "pillow",
+        "Pillow<12.3.0",
         "qrplatba>=0.3.3",
         "babel",
     ],

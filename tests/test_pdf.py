@@ -162,3 +162,26 @@ class TestBaseInvoice(unittest.TestCase):
         self.assertTrue(u"$3,000.00" in pdf_string)
         self.assertTrue(u"Total with tax: $30,150.00" in pdf_string)
         self.assertTrue(u"Creator: blah" in pdf_string)
+
+    def test_generate_with_euro_and_spanish(self):
+        os.environ["INVOICE_LANG"] = "es"
+        invoice = Invoice(Client('Kkkk'), Provider('Pupik'), Creator('blah'))
+        invoice.number = 'F20140001'
+        invoice.use_tax = True
+        invoice.add_item(Item(32, 600))
+        invoice.add_item(Item(60, 50, tax=10))
+        invoice.add_item(Item(50, 60, tax=5))
+        invoice.add_item(Item(5, 600, tax=50))
+        invoice.currency_locale = 'es_ES.UTF-8'
+        invoice.currency = 'EUR'
+
+        tmp_file = NamedTemporaryFile(delete=False)
+
+        pdf = SimpleInvoice(invoice)
+        pdf.gen(tmp_file.name)
+
+        pdf = PdfReader(tmp_file)
+        pdf_string = pdf.pages[0].extract_text()
+        self.assertTrue(u"30.150,00 €" in pdf_string)
+        self.assertTrue(u"Total con impuesto: 30.150,00 €" in pdf_string)
+        self.assertTrue(u"Creado por: blah" in pdf_string)

@@ -1,0 +1,125 @@
+# Spanish translations for InvoiceGenerator.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-22 15:04+0100\n"
+"PO-Revision-Date: 2026-09-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, python-format
+msgid "Vat in: %s"
+msgstr "NIF: %s"
+
+#, python-format
+msgid "IR: %s"
+msgstr "CIF: %s"
+
+#, python-format
+msgid "Page %(page_number)d of %(page_count)d"
+msgstr "Página %(page_number)d de %(page_count)d"
+
+#, python-format
+msgid "Invoice num.: %s"
+msgstr "Factura n.º: %s"
+
+msgid "Customer"
+msgstr "Cliente"
+
+msgid "Provider"
+msgstr "Proveedor"
+
+msgid "Payment information"
+msgstr "Información de pago"
+
+msgid "Account n."
+msgstr "Cuenta n.º"
+
+msgid "Variable symbol"
+msgstr "Símbolo variable"
+
+msgid "Specific symbol"
+msgstr "Símbolo específico"
+
+msgid "List of items"
+msgstr "Lista de conceptos"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Units"
+msgstr "Unidades"
+
+msgid "Price per one"
+msgstr "Precio unitario"
+
+msgid "Total price"
+msgstr "Precio total"
+
+msgid "Tax"
+msgstr "Impuesto"
+
+msgid "Total price with tax"
+msgstr "Precio total con impuesto"
+
+msgid "Rounding"
+msgstr "Redondeo"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Breakdown VAT"
+msgstr "Desglose de IVA"
+
+msgid "VAT rate"
+msgstr "Tipo de IVA"
+
+msgid "Without VAT"
+msgstr "Sin IVA"
+
+msgid "With VAT"
+msgstr "Con IVA"
+
+msgid "Total with tax"
+msgstr "Total con impuesto"
+
+msgid "Creator"
+msgstr "Creado por"
+
+msgid "Date of exposure taxable invoice"
+msgstr "Fecha de emisión de factura"
+
+msgid "Taxable invoice num.: %s"
+msgstr "Factura sujeta a IVA n.º: %s"
+
+msgid "Due date"
+msgstr "Fecha de vencimiento"
+
+msgid "Taxable date"
+msgstr "Fecha de devengo"
+
+msgid "Paytype"
+msgstr "Forma de pago"
+
+#, python-format
+msgid "Correcting document: %s"
+msgstr "Documento rectificativo: %s"
+
+#, python-format
+msgid "Correction document for invoice: %s"
+msgstr "Documento rectificativo para factura: %s"
+
+#, python-format
+msgid "Reason to correction: %s"
+msgstr "Motivo de la rectificación: %s"
+
+msgid "Date of exposure"
+msgstr "Fecha de emisión"
+
+msgid "Document num.: %s"
+msgstr "Documento n.º: %s"
